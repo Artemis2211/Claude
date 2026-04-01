@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Soutien Étudiant — Chatbot Bien-Être</title>
   <style>
-    /* ── Design tokens ── */
     :root {
       --bg:          #F4F1EC;
       --surface:     #FFFDF9;
-      --primary:     #5B8FA8;   /* bleu apaisant */
+      --primary:     #5B8FA8;
       --primary-dk:  #3E6F87;
-      --accent:      #8EBD9E;   /* vert doux */
       --crisis:      #D95F4B;
       --crisis-bg:   #FDF1EF;
       --text:        #2E2E2E;
@@ -33,6 +31,68 @@
       align-items: center;
       justify-content: center;
       padding: 16px;
+    }
+
+    /* ── Setup screen ── */
+    .setup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .setup-overlay.hidden { display: none; }
+    .setup-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: var(--shadow);
+    }
+    .setup-card h2 { font-size: 1.1rem; color: var(--text); margin-bottom: 6px; }
+    .setup-card p  { font-size: 0.82rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 18px; }
+    .setup-card input {
+      width: 100%;
+      border: 1.5px solid #DDD;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 12px;
+    }
+    .setup-card input:focus { border-color: var(--primary); }
+    .setup-btn {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .setup-btn:hover { background: var(--primary-dk); }
+    .setup-note {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+    .setup-error {
+      font-size: 0.78rem;
+      color: var(--crisis);
+      margin-bottom: 8px;
+      display: none;
     }
 
     /* ── Shell ── */
@@ -68,32 +128,22 @@
     .header-info { flex: 1; }
     .header-name { font-weight: 700; font-size: 1rem; }
     .header-status {
-      font-size: 0.75rem;
-      opacity: .85;
-      display: flex; align-items: center; gap: 5px;
-      margin-top: 2px;
+      font-size: 0.75rem; opacity: .85;
+      display: flex; align-items: center; gap: 5px; margin-top: 2px;
     }
     .dot-online {
       width: 8px; height: 8px;
-      background: #7EE8A2;
-      border-radius: 50%;
+      background: #7EE8A2; border-radius: 50%;
       animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0%,100% { opacity: 1; }
-      50%      { opacity: .4; }
-    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
     .nav-btn {
       background: rgba(255,255,255,0.18);
-      border: none;
-      color: #fff;
-      border-radius: 10px;
-      padding: 6px 12px;
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: background .2s;
+      border: none; color: #fff;
+      border-radius: 10px; padding: 6px 12px;
+      font-size: 0.78rem; cursor: pointer;
     }
-    .nav-btn:hover { background: rgba(255,255,255,0.3); }
     .nav-btn.active { background: rgba(255,255,255,0.35); font-weight: 600; }
 
     /* ── Crisis banner ── */
@@ -101,27 +151,19 @@
       background: var(--crisis-bg);
       border-left: 4px solid var(--crisis);
       padding: 10px 16px;
-      display: none;
-      align-items: center;
-      gap: 10px;
+      display: none; align-items: center; gap: 10px;
     }
     .crisis-banner.visible { display: flex; }
-    .crisis-banner .icon { font-size: 20px; flex-shrink: 0; }
+    .crisis-icon { font-size: 20px; flex-shrink: 0; }
     .crisis-text { font-size: 0.8rem; color: var(--text); line-height: 1.4; }
     .crisis-text strong { color: var(--crisis); }
     .crisis-call {
       margin-left: auto;
-      background: var(--crisis);
-      color: #fff;
-      border: none;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      text-decoration: none;
-      display: inline-block;
+      background: var(--crisis); color: #fff;
+      border: none; border-radius: 20px;
+      padding: 6px 14px; font-size: 0.85rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+      text-decoration: none; display: inline-block;
     }
 
     /* ── Views ── */
@@ -130,19 +172,13 @@
 
     /* ── Chat ── */
     .chat-messages {
-      flex: 1;
-      overflow-y: auto;
+      flex: 1; overflow-y: auto;
       padding: 16px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      display: flex; flex-direction: column; gap: 10px;
       scroll-behavior: smooth;
     }
-
     .msg {
-      display: flex;
-      flex-direction: column;
-      max-width: 82%;
+      display: flex; flex-direction: column; max-width: 82%;
       animation: fadeUp .3s ease both;
     }
     @keyframes fadeUp {
@@ -151,170 +187,103 @@
     }
     .msg.bot  { align-self: flex-start; }
     .msg.user { align-self: flex-end; }
-
     .bubble {
-      padding: 11px 15px;
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      line-height: 1.5;
+      padding: 11px 15px; border-radius: var(--radius);
+      font-size: 0.9rem; line-height: 1.55;
     }
-    .msg.bot  .bubble {
-      background: var(--bubble-bot);
-      color: var(--text);
-      border-bottom-left-radius: 4px;
-    }
-    .msg.user .bubble {
-      background: var(--bubble-user);
-      color: #fff;
-      border-bottom-right-radius: 4px;
-    }
-    .msg-time {
-      font-size: 0.68rem;
-      color: var(--text-soft);
-      margin-top: 3px;
-      padding: 0 4px;
-    }
+    .msg.bot  .bubble { background: var(--bubble-bot); color: var(--text); border-bottom-left-radius: 4px; }
+    .msg.user .bubble { background: var(--bubble-user); color: #fff; border-bottom-right-radius: 4px; }
+    .msg-time { font-size: 0.68rem; color: var(--text-soft); margin-top: 3px; padding: 0 4px; }
     .msg.user .msg-time { text-align: right; }
 
     /* Typing indicator */
     .typing {
-      display: none;
-      align-self: flex-start;
+      display: none; align-self: flex-start;
       background: var(--bubble-bot);
-      border-radius: var(--radius);
-      border-bottom-left-radius: 4px;
+      border-radius: var(--radius); border-bottom-left-radius: 4px;
       padding: 12px 18px;
     }
     .typing.visible { display: flex; gap: 5px; align-items: center; }
     .typing span {
-      width: 7px; height: 7px;
-      background: var(--primary);
-      border-radius: 50%;
-      animation: bounce 1.1s infinite;
+      width: 7px; height: 7px; background: var(--primary);
+      border-radius: 50%; animation: bounce 1.1s infinite;
     }
     .typing span:nth-child(2) { animation-delay: .18s; }
     .typing span:nth-child(3) { animation-delay: .36s; }
-    @keyframes bounce {
-      0%,80%,100% { transform: translateY(0); }
-      40%          { transform: translateY(-6px); }
-    }
+    @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
 
     /* Quick replies */
-    .quick-replies {
-      padding: 8px 14px 4px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .quick-replies { padding: 8px 14px 4px; display: flex; flex-wrap: wrap; gap: 8px; }
     .qr-btn {
-      background: #fff;
-      border: 1.5px solid var(--primary);
-      color: var(--primary);
-      border-radius: 20px;
-      padding: 7px 15px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: all .2s;
-      font-family: inherit;
+      background: #fff; border: 1.5px solid var(--primary);
+      color: var(--primary); border-radius: 20px;
+      padding: 7px 15px; font-size: 0.82rem;
+      cursor: pointer; transition: all .2s; font-family: inherit;
     }
-    .qr-btn:hover {
-      background: var(--primary);
-      color: #fff;
-    }
+    .qr-btn:hover { background: var(--primary); color: #fff; }
 
     /* Input bar */
-    .input-bar {
-      padding: 10px 14px 14px;
-      display: flex;
-      gap: 8px;
-    }
+    .input-bar { padding: 10px 14px 14px; display: flex; gap: 8px; }
     .input-bar input {
-      flex: 1;
-      border: 1.5px solid #DDD;
-      border-radius: 22px;
-      padding: 10px 16px;
-      font-size: 0.88rem;
-      font-family: inherit;
-      background: var(--bg);
-      outline: none;
-      transition: border-color .2s;
-      color: var(--text);
+      flex: 1; border: 1.5px solid #DDD; border-radius: 22px;
+      padding: 10px 16px; font-size: 0.88rem; font-family: inherit;
+      background: var(--bg); outline: none; transition: border-color .2s; color: var(--text);
     }
     .input-bar input:focus { border-color: var(--primary); }
+    .input-bar input:disabled { opacity: .5; }
     .send-btn {
-      background: var(--primary);
-      border: none;
-      color: #fff;
-      width: 42px; height: 42px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
+      background: var(--primary); border: none; color: #fff;
+      width: 42px; height: 42px; border-radius: 50%;
+      cursor: pointer; font-size: 18px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      transition: background .2s;
     }
     .send-btn:hover { background: var(--primary-dk); }
+    .send-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-    /* ── Resources view ── */
-    .resources {
-      flex: 1;
-      overflow-y: auto;
-      padding: 18px 16px;
-    }
-    .res-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 14px;
-    }
+    /* ── Resources ── */
+    .resources { flex: 1; overflow-y: auto; padding: 18px 16px; }
+    .res-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 14px; }
     .res-card {
-      background: var(--bg);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
+      background: var(--bg); border-radius: 14px;
+      padding: 14px 16px; margin-bottom: 10px;
+      display: flex; align-items: flex-start; gap: 12px;
     }
-    .res-icon {
-      font-size: 26px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
+    .res-icon { font-size: 26px; flex-shrink: 0; margin-top: 2px; }
     .res-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
     .res-desc { font-size: 0.78rem; color: var(--text-soft); margin-top: 3px; line-height: 1.4; }
     .res-cta {
-      margin-top: 8px;
-      display: inline-block;
-      background: var(--primary);
-      color: #fff;
-      border-radius: 14px;
-      padding: 5px 14px;
-      font-size: 0.78rem;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
+      margin-top: 8px; display: inline-block;
+      background: var(--primary); color: #fff;
+      border-radius: 14px; padding: 5px 14px;
+      font-size: 0.78rem; text-decoration: none;
+      border: none; cursor: pointer; font-family: inherit;
     }
     .res-card.crisis-card { border-left: 3px solid var(--crisis); }
     .res-card.crisis-card .res-cta { background: var(--crisis); }
 
-    /* ── Footer label ── */
     footer {
-      text-align: center;
-      font-size: 0.68rem;
-      color: var(--text-soft);
-      padding: 8px 0 10px;
-      border-top: 1px solid #EEE;
-      background: var(--surface);
+      text-align: center; font-size: 0.68rem; color: var(--text-soft);
+      padding: 8px 0 10px; border-top: 1px solid #EEE; background: var(--surface);
     }
   </style>
 </head>
 <body>
 
-<div class="shell">
+<!-- ── Setup overlay ── -->
+<div class="setup-overlay" id="setup-overlay">
+  <div class="setup-card">
+    <h2>🔑 Clé API Anthropic</h2>
+    <p>Ce chatbot utilise Claude (IA d'Anthropic) pour répondre. Entre ta clé API pour commencer. Elle reste dans ton navigateur et n'est jamais envoyée ailleurs.</p>
+    <div class="setup-error" id="setup-error">Clé invalide ou erreur réseau. Vérifie ta clé.</div>
+    <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
+    <button class="setup-btn" onclick="startChat()">Commencer →</button>
+    <p class="setup-note">Ta clé est stockée localement (localStorage) et utilisée uniquement pour appeler l'API Anthropic.<br>Obtenir une clé : <strong>console.anthropic.com</strong></p>
+  </div>
+</div>
 
-  <!-- Header -->
+<!-- ── App shell ── -->
+<div class="shell">
   <header>
     <div class="avatar">🤝</div>
     <div class="header-info">
@@ -328,9 +297,8 @@
     <button class="nav-btn" id="btn-res" onclick="showView('resources')">Ressources</button>
   </header>
 
-  <!-- Crisis banner (hidden until triggered) -->
   <div class="crisis-banner" id="crisis-banner">
-    <span class="icon">🆘</span>
+    <span class="crisis-icon">🆘</span>
     <div class="crisis-text">
       Si tu as des pensées sombres, tu n'es pas seul(e).<br>
       <strong>3114</strong> — Numéro National Prévention Suicide (24h/24, gratuit)
@@ -338,286 +306,169 @@
     <a href="tel:3114" class="crisis-call">📞 3114</a>
   </div>
 
-  <!-- ── Chat view ── -->
+  <!-- Chat -->
   <div class="view active" id="view-chat">
     <div class="chat-messages" id="messages">
       <div class="typing" id="typing">
         <span></span><span></span><span></span>
       </div>
     </div>
-
     <div class="quick-replies" id="quick-replies"></div>
-
     <div class="input-bar">
       <input type="text" id="user-input"
         placeholder="Écris quelque chose…"
-        onkeydown="if(event.key==='Enter') sendText()" />
-      <button class="send-btn" onclick="sendText()">➤</button>
+        onkeydown="if(event.key==='Enter' && !event.shiftKey) sendText()"
+        disabled />
+      <button class="send-btn" id="send-btn" onclick="sendText()" disabled>➤</button>
     </div>
   </div>
 
-  <!-- ── Resources view ── -->
+  <!-- Resources -->
   <div class="view" id="view-resources">
     <div class="resources">
       <div class="res-title">Ressources d'aide 💙</div>
-
       <div class="res-card crisis-card">
         <div class="res-icon">🆘</div>
         <div>
           <div class="res-name">3114 — Prévention Suicide</div>
-          <div class="res-desc">Numéro national gratuit, disponible 24h/24, 7j/7. Des professionnels de santé à l'écoute si tu traverses une crise.</div>
+          <div class="res-desc">Numéro national gratuit, disponible 24h/24. Des professionnels de santé à l'écoute si tu traverses une crise.</div>
           <a href="tel:3114" class="res-cta">Appeler le 3114</a>
         </div>
       </div>
-
       <div class="res-card">
         <div class="res-icon">🌙</div>
         <div>
           <div class="res-name">Nightline France</div>
           <div class="res-desc">Ligne d'écoute tenue par des étudiant(e)s bénévoles. Chaque soir de 21h à 2h30. Anonyme et gratuite.</div>
-          <button class="res-cta" onclick="alert('nightline.fr · 0800 235 236')">Infos Nightline</button>
+          <a href="tel:0800235236" class="res-cta">0800 235 236</a>
         </div>
       </div>
-
       <div class="res-card">
         <div class="res-icon">🏥</div>
         <div>
           <div class="res-name">SSU — Service de Santé Universitaire</div>
-          <div class="res-desc">Consultations médicales et psychologiques gratuites ou à tarif réduit pour les étudiants inscrits. Prends RDV via ton université.</div>
-          <button class="res-cta" onclick="alert('Contacte le SSU de ton université.')">Trouver mon SSU</button>
+          <div class="res-desc">Consultations médicales et psychologiques gratuites ou à tarif réduit pour les étudiants inscrits.</div>
         </div>
       </div>
-
       <div class="res-card">
         <div class="res-icon">💬</div>
         <div>
           <div class="res-name">Fil Santé Jeunes</div>
-          <div class="res-desc">0 800 235 236 — appel, chat ou email. Gratuit pour les 12–25 ans. Santé physique, mentale, vie quotidienne.</div>
+          <div class="res-desc">0 800 235 236 — appel, chat ou email. Gratuit pour les 12–25 ans.</div>
           <a href="tel:0800235236" class="res-cta">Appeler</a>
         </div>
       </div>
-
       <div class="res-card">
         <div class="res-icon">🧘</div>
         <div>
           <div class="res-name">Santé Psy Étudiant</div>
-          <div class="res-desc">Jusqu'à 8 séances de suivi psychologique gratuit remboursées pour les étudiants. Dispositif national Ségur.</div>
-          <button class="res-cta" onclick="alert('santepsy.sante.gouv.fr')">En savoir plus</button>
+          <div class="res-desc">Jusqu'à 8 séances de suivi psychologique gratuites pour les étudiants. Dispositif national.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <footer>Lo-Fi Prototype v0.1 — à des fins de démonstration uniquement</footer>
+  <footer>Propulsé par Claude (Anthropic) · v1.0</footer>
 </div>
 
 <script>
-/* ─────────────────────────────────────────
-   CONVERSATION SCRIPT
-   ───────────────────────────────────────── */
+const SYSTEM_PROMPT = `Tu es un assistant bienveillant spécialisé dans le soutien psychologique des étudiants. Tu réponds TOUJOURS en français, avec empathie et sans jugement.
 
-// Crisis keywords — trigger the banner
+TON RÔLE :
+- Écouter activement et valider les émotions de l'étudiant
+- Poser des questions ouvertes pour mieux comprendre sa situation
+- Orienter vers des ressources professionnelles adaptées quand nécessaire
+- Tu ne remplaces pas un professionnel de santé mentale
+
+STYLE DE RÉPONSE :
+- Chaleureux, doux, sans jargon médical
+- Réponses courtes à modérées (2-5 phrases), jamais de longs discours
+- Utilise parfois des emojis discrets (💙 🌱 🤝) pour humaniser
+- Tutoie l'étudiant
+- Ne donne jamais de diagnostic
+
+RÈGLES DE SÉCURITÉ (PRIORITÉ ABSOLUE) :
+- Si l'étudiant mentionne des pensées suicidaires, envie de mourir, de se blesser, ou de "en finir" → dis-lui immédiatement que le 3114 (numéro national prévention suicide, gratuit, 24h/24) est là pour lui, et que des professionnels formés l'écouteront sans jugement.
+- Rappelle toujours que demander de l'aide est un acte de courage.
+
+RESSOURCES À MENTIONNER SELON LE CONTEXTE :
+- Isolement / besoin de parler : Nightline (0800 235 236, soir 21h-2h30, tenu par des étudiants bénévoles)
+- Suivi psychologique : SSU de l'université ou dispositif Santé Psy Étudiant (8 séances gratuites)
+- Crise / urgence : 3114
+- 12-25 ans, tout sujet : Fil Santé Jeunes (0800 235 236)`;
+
 const CRISIS_KEYWORDS = [
   'suicide','suicidaire','mourir','me tuer','envie de mourir',
   'en finir','plus envie de vivre','pensées sombres','me faire du mal',
-  'me blesser','désespéré','désespoir','plus envie de rien'
+  'me blesser','désespéré','désespoir','plus envie de rien','me suicider'
 ];
 
-// State
-let step = 'init';
+let apiKey = '';
+let history = [];
 let crisisShown = false;
+let busy = false;
 
-/* ── Conversation tree ──────────────────── */
-const FLOWS = {
-
-  init: {
-    bot: "Bonjour 👋 Je suis là pour t'écouter, sans jugement.\n\nComment tu te sens en ce moment ?",
-    replies: [
-      { label: "😔 Pas bien du tout", next: 'pasbien' },
-      { label: "😰 Stressé(e)",        next: 'stress'  },
-      { label: "🫂 Seul(e)",            next: 'seul'    },
-      { label: "🤷 Je ne sais pas",    next: 'saispa'  },
-    ]
-  },
-
-  /* ── Branche : Pas bien du tout ── */
-  pasbien: {
-    bot: "Je suis désolé(e) d'entendre ça. 💙\n\nEst-ce que tu peux me dire depuis combien de temps tu te sens comme ça ?",
-    replies: [
-      { label: "Depuis quelques jours", next: 'pasbien_court' },
-      { label: "Depuis plusieurs semaines", next: 'pasbien_long' },
-      { label: "Je ne sais pas vraiment", next: 'pasbien_court' },
-    ]
-  },
-  pasbien_court: {
-    bot: "Merci de me le dire. Il est normal de traverser des périodes difficiles.\n\nAs-tu quelqu'un à qui en parler — un ami, la famille ?",
-    replies: [
-      { label: "Oui, j'ai du soutien", next: 'soutien_oui' },
-      { label: "Non, je suis seul(e)", next: 'soutien_non' },
-    ]
-  },
-  pasbien_long: {
-    bot: "Plusieurs semaines, c'est long à porter seul(e). Tu mérites un vrai soutien.\n\nAs-tu pensé à parler à un professionnel de santé ?",
-    replies: [
-      { label: "J'ai déjà essayé", next: 'pro_essaye' },
-      { label: "Je ne sais pas comment faire", next: 'pro_comment' },
-      { label: "J'ai peur du jugement", next: 'pro_peur' },
-    ]
-  },
-
-  /* ── Branche : Stress ── */
-  stress: {
-    bot: "Le stress étudiant est réel et épuisant. 😮‍💨\n\nD'où vient principalement ton stress ?",
-    replies: [
-      { label: "Les examens / le travail", next: 'stress_exam' },
-      { label: "La vie sociale / la famille", next: 'stress_social' },
-      { label: "Le logement / l'argent",     next: 'stress_mat' },
-      { label: "Tout à la fois",             next: 'stress_tout' },
-    ]
-  },
-  stress_exam: {
-    bot: "La pression académique peut être écrasante. Tu n'es pas seul(e) dans cette situation.\n\nEst-ce que tu arrives à te ménager des pauses ?",
-    replies: [
-      { label: "Oui, j'essaie", next: 'stress_bien' },
-      { label: "Non, pas vraiment", next: 'stress_mal' },
-    ]
-  },
-  stress_social: {
-    bot: "Les relations peuvent peser lourd sur notre moral. C'est courageux de le reconnaître.\n\nEst-ce qu'il y a quelque chose de précis qui te pèse ?",
-    replies: [
-      { label: "Un conflit avec quelqu'un", next: 'stress_mal' },
-      { label: "Je me sens exclu(e)",        next: 'seul'      },
-      { label: "Je préfère ne pas détailler", next: 'stress_bien' },
-    ]
-  },
-  stress_mat: {
-    bot: "Les difficultés matérielles ajoutent une pression immense. Il existe des aides pour les étudiants.\n\nAs-tu accès au CROUS ou aux services sociaux de ton université ?",
-    replies: [
-      { label: "Oui, je connais", next: 'stress_bien' },
-      { label: "Non, comment faire ?", next: 'ressources_mat' },
-    ]
-  },
-  stress_tout: {
-    bot: "Quand tout s'accumule, même respirer devient difficile. C'est beaucoup à gérer seul(e).\n\nQu'est-ce qui te semblerait le plus urgent à alléger en ce moment ?",
-    replies: [
-      { label: "Le côté académique",  next: 'stress_exam' },
-      { label: "Le côté émotionnel",  next: 'pasbien'     },
-      { label: "Je ne sais pas",      next: 'pro_comment' },
-    ]
-  },
-  stress_bien: {
-    bot: "C'est bien de prendre soin de toi. 🌱\n\nN'oublie pas que les ressources du SSU et de Santé Psy Étudiant sont là si tu en as besoin.",
-    replies: [{ label: "Merci 🙏", next: 'fin' }]
-  },
-  stress_mal: {
-    bot: "S'accorder du repos n'est pas une faiblesse, c'est une nécessité. 💙\n\nLe SSU de ton université propose souvent un soutien psychologique gratuit. Tu veux en savoir plus ?",
-    replies: [
-      { label: "Oui, dis-moi en plus", next: 'pro_comment' },
-      { label: "Pas pour l'instant",   next: 'fin'         },
-    ]
-  },
-
-  /* ── Branche : Seul(e) ── */
-  seul: {
-    bot: "Se sentir seul(e) parmi des centaines d'étudiant(e)s, c'est paradoxal et douloureux. Tu n'as pas à rester là tout seul(e).\n\nEst-ce que c'est une solitude récente ou depuis longtemps ?",
-    replies: [
-      { label: "Plutôt récente", next: 'seul_recent' },
-      { label: "Depuis longtemps", next: 'seul_long' },
-    ]
-  },
-  seul_recent: {
-    bot: "Un changement de vie (nouvelle ville, université…) peut provoquer un isolement temporaire. C'est normal, même si c'est douloureux.\n\nAs-tu des activités, associations ou clubs où tu pourrais rencontrer des gens ?",
-    replies: [
-      { label: "J'ai essayé, ça ne prend pas", next: 'seul_long' },
-      { label: "Pas encore, bonne idée",        next: 'fin'       },
-      { label: "Je n'ai pas l'énergie",         next: 'pasbien'   },
-    ]
-  },
-  seul_long: {
-    bot: "Un isolement qui dure peut peser très lourd. Tu mérites de te sentir entouré(e).\n\nLa Nightline — tenue par des étudiants bénévoles — est disponible chaque soir. Ça peut être un premier pas.",
-    replies: [
-      { label: "Je vais essayer Nightline", next: 'fin' },
-      { label: "J'aimerais parler à un psy", next: 'pro_comment' },
-    ]
-  },
-
-  /* ── Branche : Je ne sais pas ── */
-  saispa: {
-    bot: "C'est déjà bien de chercher à mettre des mots sur ce que tu ressens. 🌿\n\nEst-ce que physiquement tu te sens comment ? Tu dors, tu manges correctement ?",
-    replies: [
-      { label: "Pas vraiment, non", next: 'pasbien'   },
-      { label: "Ça va à peu près",  next: 'saispa2'   },
-    ]
-  },
-  saispa2: {
-    bot: "Parfois on a juste besoin de parler sans savoir exactement pourquoi. C'est totalement valable.\n\nEst-ce qu'il y a quelque chose qui t'occupe l'esprit en ce moment ?",
-    replies: [
-      { label: "Oui, un peu",     next: 'pasbien'   },
-      { label: "Pas vraiment",    next: 'fin'        },
-      { label: "J'ai des pensées qui me font peur", next: 'crisis_direct' },
-    ]
-  },
-
-  /* ── Pro ── */
-  pro_essaye: {
-    bot: "C'est courageux d'avoir essayé. Parfois il faut trouver le bon professionnel, celui avec qui on se sent à l'aise.\n\nLe dispositif Santé Psy Étudiant permet 8 séances gratuites. Tu peux essayer un autre suivi.",
-    replies: [{ label: "Je vais voir", next: 'fin' }]
-  },
-  pro_comment: {
-    bot: "Voici comment accéder à un soutien gratuit :\n\n1. Contacte le SSU de ton université\n2. Utilise le dispositif Santé Psy Étudiant (santepsy.sante.gouv.fr)\n3. Appelle le Fil Santé Jeunes : 0 800 235 236\n\nTu n'as pas à gérer ça seul(e). 💙",
-    replies: [
-      { label: "Merci pour ces infos", next: 'fin' },
-      { label: "Voir toutes les ressources", action: 'resources' },
-    ]
-  },
-  pro_peur: {
-    bot: "La peur du jugement est très compréhensible. Mais les professionnels de santé sont là pour aider, pas pour juger.\n\nLa confidentialité est garantie. Tout ce que tu dis reste entre toi et le professionnel.",
-    replies: [
-      { label: "Ça me rassure un peu", next: 'pro_comment' },
-      { label: "J'ai encore besoin d'y réfléchir", next: 'fin' },
-    ]
-  },
-
-  /* ── Soutien ── */
-  soutien_oui: {
-    bot: "C'est une vraie force d'avoir du soutien autour de soi. 💙\n\nN'hésite pas à en parler à ces personnes. Et si jamais tu as besoin d'un soutien professionnel en plus, le SSU est là.",
-    replies: [{ label: "Merci 🙏", next: 'fin' }]
-  },
-  soutien_non: {
-    bot: "Je suis content(e) que tu m'en parles. Tu n'as pas à rester seul(e) avec ça.\n\nLa Nightline est tenue par des étudiants bénévoles, chaque soir jusqu'à 2h30. Anonyme et gratuit.",
-    replies: [
-      { label: "Je vais appeler Nightline",   next: 'fin'         },
-      { label: "Je préfère parler à un psy",  next: 'pro_comment' },
-    ]
-  },
-
-  /* ── Ressources matérielles ── */
-  ressources_mat: {
-    bot: "Pour les difficultés matérielles, plusieurs aides existent :\n\n• Aides d'urgence du CROUS\n• Assistante sociale de ton université\n• Épiceries solidaires étudiantes\n\nDemande au bureau de la vie étudiante (BVE) de ton université.",
-    replies: [{ label: "Merci pour l'info", next: 'fin' }]
-  },
-
-  /* ── Crise directe ── */
-  crisis_direct: {
-    bot: "Merci de me faire confiance avec ça. Ce que tu ressens est sérieux et tu mérites de l'aide maintenant.\n\nLe 3114 est là pour toi, 24h/24, gratuit et confidentiel. Des professionnels formés répondront sans te juger.",
-    replies: [
-      { label: "Je vais appeler le 3114", next: 'fin' },
-      { label: "Je ne suis pas prêt(e)", next: 'fin'  },
-    ],
-    crisis: true
-  },
-
-  /* ── Fin ── */
-  fin: {
-    bot: "Prendre soin de toi, c'est la chose la plus courageuse que tu puisses faire. 🌱\n\nJe suis là si tu veux continuer à en parler. Tu peux aussi consulter l'onglet Ressources à tout moment.",
-    replies: [
-      { label: "Recommencer", next: 'init' },
-      { label: "Voir les ressources", action: 'resources' },
-    ]
+/* ── Setup ── */
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('anthropic_key');
+  if (saved) {
+    apiKey = saved;
+    document.getElementById('setup-overlay').classList.add('hidden');
+    boot();
+  } else {
+    document.getElementById('api-key-input').focus();
   }
-};
+});
 
-/* ── Utilities ── */
+async function startChat() {
+  const input = document.getElementById('api-key-input');
+  const key = input.value.trim();
+  const err = document.getElementById('setup-error');
+  err.style.display = 'none';
+
+  if (!key.startsWith('sk-ant-')) {
+    err.textContent = 'La clé doit commencer par sk-ant-…';
+    err.style.display = 'block';
+    return;
+  }
+
+  // Quick validation call
+  const btn = document.querySelector('.setup-btn');
+  btn.textContent = 'Vérification…';
+  btn.disabled = true;
+
+  try {
+    const res = await callClaude(key, [{ role: 'user', content: 'Dis juste "ok".' }], 10);
+    apiKey = key;
+    localStorage.setItem('anthropic_key', key);
+    document.getElementById('setup-overlay').classList.add('hidden');
+    boot();
+  } catch(e) {
+    err.textContent = 'Clé invalide ou problème réseau. Réessaie.';
+    err.style.display = 'block';
+    btn.textContent = 'Commencer →';
+    btn.disabled = false;
+  }
+}
+
+/* ── Boot ── */
+function boot() {
+  document.getElementById('user-input').disabled = false;
+  document.getElementById('send-btn').disabled = false;
+  history = [];
+
+  // Initial quick replies
+  setQuickReplies([
+    { label: "😔 Pas bien du tout" },
+    { label: "😰 Stressé(e)" },
+    { label: "🫂 Seul(e)" },
+    { label: "🤷 Je ne sais pas" },
+  ]);
+
+  botReply("Bonjour 👋 Je suis là pour t'écouter, sans jugement.\n\nComment tu te sens en ce moment ?");
+}
+
+/* ── Helpers ── */
 function now() {
   return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
@@ -626,48 +477,37 @@ function appendMsg(text, who) {
   const msgs = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = `msg ${who}`;
-  div.innerHTML = `
-    <div class="bubble">${text.replace(/\n/g,'<br>')}</div>
-    <div class="msg-time">${now()}</div>
-  `;
+  div.innerHTML = `<div class="bubble">${text.replace(/\n/g,'<br>')}</div><div class="msg-time">${now()}</div>`;
   msgs.insertBefore(div, document.getElementById('typing'));
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-function setQuickReplies(replies) {
+function setQuickReplies(items) {
   const qr = document.getElementById('quick-replies');
   qr.innerHTML = '';
-  (replies || []).forEach(r => {
+  items.forEach(item => {
     const btn = document.createElement('button');
     btn.className = 'qr-btn';
-    btn.textContent = r.label;
+    btn.textContent = item.label;
     btn.onclick = () => {
-      if (r.action === 'resources') { showView('resources'); return; }
-      appendMsg(r.label, 'user');
       qr.innerHTML = '';
-      if (r.next) setTimeout(() => runStep(r.next), 400);
+      sendMessage(item.label);
     };
     qr.appendChild(btn);
   });
 }
 
-function showTyping(ms) {
-  return new Promise(resolve => {
-    const t = document.getElementById('typing');
-    t.classList.add('visible');
-    document.getElementById('messages').scrollTop = 9999;
-    setTimeout(() => { t.classList.remove('visible'); resolve(); }, ms);
-  });
+function showTyping() {
+  document.getElementById('typing').classList.add('visible');
+  document.getElementById('messages').scrollTop = 99999;
+}
+function hideTyping() {
+  document.getElementById('typing').classList.remove('visible');
 }
 
-async function runStep(key) {
-  const node = FLOWS[key];
-  if (!node) return;
-  step = key;
-  if (node.crisis) showCrisis();
-  await showTyping(900 + node.bot.length * 12);
-  appendMsg(node.bot, 'bot');
-  setQuickReplies(node.replies);
+function botReply(text) {
+  appendMsg(text, 'bot');
+  history.push({ role: 'assistant', content: text });
 }
 
 function showCrisis() {
@@ -681,30 +521,68 @@ function detectCrisis(text) {
   return CRISIS_KEYWORDS.some(k => t.includes(k));
 }
 
-/* ── Free-text send ── */
+/* ── API ── */
+async function callClaude(key, messages, maxTokens = 400) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: maxTokens,
+      system: SYSTEM_PROMPT,
+      messages
+    })
+  });
+
+  if (!res.ok) throw new Error(`API error ${res.status}`);
+  const data = await res.json();
+  return data.content[0].text;
+}
+
+/* ── Send ── */
+async function sendMessage(text) {
+  if (busy) return;
+  busy = true;
+
+  document.getElementById('user-input').disabled = true;
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('quick-replies').innerHTML = '';
+
+  appendMsg(text, 'user');
+  history.push({ role: 'user', content: text });
+
+  if (detectCrisis(text)) showCrisis();
+
+  showTyping();
+
+  try {
+    const reply = await callClaude(apiKey, history);
+    hideTyping();
+    botReply(reply);
+
+    if (detectCrisis(reply)) showCrisis();
+  } catch(e) {
+    hideTyping();
+    botReply("Désolé, une erreur s'est produite. Vérifie ta connexion et réessaie. 🙏");
+  }
+
+  document.getElementById('user-input').disabled = false;
+  document.getElementById('send-btn').disabled = false;
+  document.getElementById('user-input').focus();
+  busy = false;
+}
+
 function sendText() {
   const inp = document.getElementById('user-input');
   const val = inp.value.trim();
-  if (!val) return;
+  if (!val || busy) return;
   inp.value = '';
-  appendMsg(val, 'user');
-  document.getElementById('quick-replies').innerHTML = '';
-
-  if (detectCrisis(val)) {
-    showCrisis();
-    setTimeout(() => runStep('crisis_direct'), 500);
-    return;
-  }
-
-  // Simple keyword routing
-  const t = val.toLowerCase();
-  let next = 'fin';
-  if (/stress|exam|travail|pression|anxieu/.test(t)) next = 'stress';
-  else if (/seul|isolé|ami|ami/.test(t)) next = 'seul';
-  else if (/triste|mal|déprim|pleur|fatig|épuis/.test(t)) next = 'pasbien';
-  else if (/psy|aide|soutien|professionnel/.test(t)) next = 'pro_comment';
-
-  setTimeout(() => runStep(next), 500);
+  sendMessage(val);
 }
 
 /* ── View switcher ── */
@@ -714,11 +592,6 @@ function showView(name) {
   document.getElementById('btn-chat').classList.toggle('active', name === 'chat');
   document.getElementById('btn-res').classList.toggle('active', name === 'resources');
 }
-
-/* ── Boot ── */
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => runStep('init'), 600);
-});
 </script>
 </body>
 </html>
