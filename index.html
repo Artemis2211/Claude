@@ -273,12 +273,18 @@
 <!-- ── Setup overlay ── -->
 <div class="setup-overlay" id="setup-overlay">
   <div class="setup-card">
-    <h2>🔑 Clé API Anthropic</h2>
-    <p>Ce chatbot utilise Claude (IA d'Anthropic) pour répondre. Entre ta clé API pour commencer. Elle reste dans ton navigateur et n'est jamais envoyée ailleurs.</p>
+    <h2>🔑 Clé API Google Gemini</h2>
+    <p>Ce chatbot utilise Gemini (IA de Google) pour répondre. La clé est <strong>gratuite</strong>, sans carte bancaire.</p>
+    <ol style="font-size:0.8rem;color:#555;line-height:1.7;margin-bottom:14px;padding-left:18px;">
+      <li>Va sur <strong>aistudio.google.com</strong></li>
+      <li>Connecte-toi avec ton compte Google</li>
+      <li>Clique sur <strong>"Get API key"</strong> → <strong>"Create API key"</strong></li>
+      <li>Copie-colle la clé ici 👇</li>
+    </ol>
     <div class="setup-error" id="setup-error">Clé invalide ou erreur réseau. Vérifie ta clé.</div>
-    <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
+    <input type="password" id="api-key-input" placeholder="AIza..." />
     <button class="setup-btn" onclick="startChat()">Commencer →</button>
-    <p class="setup-note">Ta clé est stockée localement (localStorage) et utilisée uniquement pour appeler l'API Anthropic.<br>Obtenir une clé : <strong>console.anthropic.com</strong></p>
+    <p class="setup-note">Ta clé est stockée dans ton navigateur uniquement et n'est jamais partagée.</p>
   </div>
 </div>
 
@@ -368,7 +374,7 @@
     </div>
   </div>
 
-  <footer>Propulsé par Claude (Anthropic) · v1.0</footer>
+  <footer>Propulsé par Gemini (Google) · v1.0</footer>
 </div>
 
 <script>
@@ -397,6 +403,8 @@ RESSOURCES À MENTIONNER SELON LE CONTEXTE :
 - Crise / urgence : 3114
 - 12-25 ans, tout sujet : Fil Santé Jeunes (0800 235 236)`;
 
+const GEMINI_MODEL = 'gemini-1.5-flash-latest';
+
 const CRISIS_KEYWORDS = [
   'suicide','suicidaire','mourir','me tuer','envie de mourir',
   'en finir','plus envie de vivre','pensées sombres','me faire du mal',
@@ -410,7 +418,7 @@ let busy = false;
 
 /* ── Setup ── */
 window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('anthropic_key');
+  const saved = localStorage.getItem('gemini_key');
   if (saved) {
     apiKey = saved;
     document.getElementById('setup-overlay').classList.add('hidden');
@@ -426,21 +434,20 @@ async function startChat() {
   const err = document.getElementById('setup-error');
   err.style.display = 'none';
 
-  if (!key.startsWith('sk-ant-')) {
-    err.textContent = 'La clé doit commencer par sk-ant-…';
+  if (!key.startsWith('AIza')) {
+    err.textContent = 'La clé doit commencer par AIza…';
     err.style.display = 'block';
     return;
   }
 
-  // Quick validation call
   const btn = document.querySelector('.setup-btn');
   btn.textContent = 'Vérification…';
   btn.disabled = true;
 
   try {
-    const res = await callClaude(key, [{ role: 'user', content: 'Dis juste "ok".' }], 10);
+    await callGemini(key, [{ role: 'user', content: 'Dis juste ok.' }]);
     apiKey = key;
-    localStorage.setItem('anthropic_key', key);
+    localStorage.setItem('gemini_key', key);
     document.getElementById('setup-overlay').classList.add('hidden');
     boot();
   } catch(e) {
@@ -521,27 +528,30 @@ function detectCrisis(text) {
   return CRISIS_KEYWORDS.some(k => t.includes(k));
 }
 
-/* ── API ── */
-async function callClaude(key, messages, maxTokens = 400) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: maxTokens,
-      system: SYSTEM_PROMPT,
-      messages
-    })
-  });
+/* ── API Gemini ── */
+async function callGemini(key, messages) {
+  // Convertit l'historique {role, content} → format Gemini {role, parts}
+  const contents = messages.map(m => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }]
+  }));
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents,
+        generationConfig: { maxOutputTokens: 400, temperature: 0.7 }
+      })
+    }
+  );
 
   if (!res.ok) throw new Error(`API error ${res.status}`);
   const data = await res.json();
-  return data.content[0].text;
+  return data.candidates[0].content.parts[0].text;
 }
 
 /* ── Send ── */
@@ -561,7 +571,7 @@ async function sendMessage(text) {
   showTyping();
 
   try {
-    const reply = await callClaude(apiKey, history);
+    const reply = await callGemini(apiKey, history);
     hideTyping();
     botReply(reply);
 
