@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soutien Étudiant — Chatbot Bien-Être</title>
+  <title>Student Support — Mental Wellness Chatbot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -453,25 +453,25 @@
   <header>
     <div class="avatar">🤝</div>
     <div class="header-info">
-      <div class="header-name">Soutien Étudiant</div>
+      <div class="header-name">Student Support</div>
       <div class="header-status">
         <span class="dot-online"></span>
-        Disponible 24h/24 · 7j/7
+        Available 24/7
       </div>
     </div>
     <div class="nav-btns">
       <button class="nav-btn active" id="btn-chat" onclick="showView('chat')">Chat</button>
-      <button class="nav-btn" id="btn-res" onclick="showView('resources')">Ressources</button>
+      <button class="nav-btn" id="btn-res" onclick="showView('resources')">Resources</button>
     </div>
   </header>
 
   <div class="crisis-banner" id="crisis-banner">
     <span class="crisis-icon">🆘</span>
     <div class="crisis-text">
-      Si tu as des pensées sombres, tu n'es pas seul(e).<br>
-      <strong>3114</strong> — Numéro National Prévention Suicide (24h/24, gratuit)
+      If you're having dark thoughts, you're not alone.<br>
+      <strong>988</strong> — Suicide &amp; Crisis Lifeline (free, 24/7 — call or text)
     </div>
-    <a href="tel:3114" class="crisis-call">📞 3114</a>
+    <a href="tel:988" class="crisis-call">📞 Call 988</a>
   </div>
 
   <!-- Chat -->
@@ -484,7 +484,7 @@
     <div class="quick-replies" id="quick-replies"></div>
     <div class="input-bar">
       <input type="text" id="user-input"
-        placeholder="Écris quelque chose…"
+        placeholder="Type something…"
         onkeydown="if(event.key==='Enter' && !event.shiftKey) sendText()"
         disabled />
       <button class="send-btn" id="send-btn" onclick="sendText()" disabled>➤</button>
@@ -494,90 +494,92 @@
   <!-- Ressources -->
   <div class="view" id="view-resources">
     <div class="resources">
-      <div class="res-title">Ressources d'aide 💙</div>
+      <div class="res-title">Help Resources 💙</div>
 
       <div class="res-card crisis-card">
         <div class="res-icon red">🆘</div>
         <div>
-          <div class="res-name">3114 — Prévention Suicide</div>
-          <div class="res-desc">Numéro national gratuit, disponible 24h/24. Des professionnels de santé à l'écoute si tu traverses une crise.</div>
-          <a href="tel:3114" class="res-cta">Appeler le 3114</a>
+          <div class="res-name">988 — Suicide &amp; Crisis Lifeline</div>
+          <div class="res-desc">Free, confidential support 24/7. Call or text <strong>988</strong> to reach a trained crisis counselor right away.</div>
+          <a href="tel:988" class="res-cta">Call or text 988</a>
         </div>
       </div>
 
       <div class="res-cards-grid">
         <div class="res-card">
-          <div class="res-icon blue">🌙</div>
+          <div class="res-icon blue">💬</div>
           <div>
-            <div class="res-name">Nightline France</div>
-            <div class="res-desc">Ligne d'écoute par des étudiant(e)s bénévoles. Chaque soir de 21h à 2h30. Anonyme et gratuite.</div>
-            <a href="tel:0800235236" class="res-cta">0800 235 236</a>
+            <div class="res-name">Crisis Text Line</div>
+            <div class="res-desc">Text HOME to 741741. Free 24/7 support from trained crisis counselors — no call needed.</div>
+            <a href="sms:741741&body=HOME" class="res-cta">Text HOME to 741741</a>
           </div>
         </div>
 
         <div class="res-card">
           <div class="res-icon green">🏥</div>
           <div>
-            <div class="res-name">SSU — Santé Universitaire</div>
-            <div class="res-desc">Consultations médicales et psychologiques gratuites ou à tarif réduit pour les étudiants.</div>
+            <div class="res-name">Campus Counseling Center</div>
+            <div class="res-desc">Free or low-cost therapy and psychiatric services for enrolled students. Check your university's student health portal.</div>
           </div>
         </div>
 
         <div class="res-card">
-          <div class="res-icon peach">💬</div>
+          <div class="res-icon peach">🧡</div>
           <div>
-            <div class="res-name">Fil Santé Jeunes</div>
-            <div class="res-desc">0 800 235 236 — appel, chat ou email. Gratuit pour les 12–25 ans.</div>
-            <a href="tel:0800235236" class="res-cta">Appeler</a>
+            <div class="res-name">NAMI HelpLine</div>
+            <div class="res-desc">1-800-950-6264 — Mon–Fri, 10am–10pm ET. Free mental health info, referrals, and support for young adults.</div>
+            <a href="tel:18009506264" class="res-cta">Call NAMI</a>
           </div>
         </div>
 
         <div class="res-card">
           <div class="res-icon yellow">🧘</div>
           <div>
-            <div class="res-name">Santé Psy Étudiant</div>
-            <div class="res-desc">Jusqu'à 8 séances de suivi psychologique gratuites pour les étudiants. Dispositif national.</div>
+            <div class="res-name">SAMHSA Helpline</div>
+            <div class="res-desc">1-800-662-4357 — Free, confidential treatment referrals and info. Available 24/7 in English and Spanish.</div>
+            <a href="tel:18006624357" class="res-cta">Call SAMHSA</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <footer>Propulsé par Groq · Llama 3.1 · v1.0</footer>
+  <footer>Powered by Groq · Llama 3.1 · v1.0</footer>
 </div>
 
 <script>
-const SYSTEM_PROMPT = `Tu es un assistant bienveillant spécialisé dans le soutien psychologique des étudiants. Tu réponds TOUJOURS en français, avec empathie et sans jugement.
+const SYSTEM_PROMPT = `You are a compassionate AI assistant specialized in supporting college students' mental health. You ALWAYS respond in English, with empathy and without judgment.
 
-TON RÔLE :
-- Écouter activement et valider les émotions de l'étudiant
-- Poser des questions ouvertes pour mieux comprendre sa situation
-- Orienter vers des ressources professionnelles adaptées quand nécessaire
-- Tu ne remplaces pas un professionnel de santé mentale
+YOUR ROLE:
+- Actively listen and validate the student's emotions
+- Ask open-ended questions to better understand their situation
+- Refer to professional resources when appropriate
+- You are not a replacement for a mental health professional
 
-STYLE DE RÉPONSE :
-- Chaleureux, doux, sans jargon médical
-- Réponses courtes à modérées (2-5 phrases), jamais de longs discours
-- Utilise parfois des emojis discrets (💙 🌱 🤝) pour humaniser
-- Tutoie l'étudiant
-- Ne donne jamais de diagnostic
+RESPONSE STYLE:
+- Warm, gentle, no medical jargon
+- Short to moderate responses (2-5 sentences), never long lectures
+- Occasionally use subtle emojis (💙 🌱 🤝) to feel more human
+- Use a friendly, informal "you" tone
+- Never give a diagnosis
 
-RÈGLES DE SÉCURITÉ (PRIORITÉ ABSOLUE) :
-- Si l'étudiant mentionne des pensées suicidaires, envie de mourir, de se blesser, ou de "en finir" → dis-lui immédiatement que le 3114 (numéro national prévention suicide, gratuit, 24h/24) est là pour lui, et que des professionnels formés l'écouteront sans jugement.
-- Rappelle toujours que demander de l'aide est un acte de courage.
+SAFETY RULES (ABSOLUTE PRIORITY):
+- If the student mentions suicidal thoughts, wanting to die, self-harm, or "ending it" → immediately tell them that the 988 Suicide & Crisis Lifeline (call or text 988, free, 24/7) is there for them, and that trained counselors will listen without judgment.
+- Always remind them that reaching out for help is a sign of strength.
 
-RESSOURCES À MENTIONNER SELON LE CONTEXTE :
-- Isolement / besoin de parler : Nightline (0800 235 236, soir 21h-2h30, tenu par des étudiants bénévoles)
-- Suivi psychologique : SSU de l'université ou dispositif Santé Psy Étudiant (8 séances gratuites)
-- Crise / urgence : 3114
-- 12-25 ans, tout sujet : Fil Santé Jeunes (0800 235 236)`;
+RESOURCES TO MENTION BY CONTEXT:
+- Isolation / need to talk: Crisis Text Line (text HOME to 741741, free, 24/7)
+- Ongoing support / therapy: Campus Counseling Center or SAMHSA Helpline (1-800-662-4357)
+- Crisis / emergency: 988 Suicide & Crisis Lifeline
+- General mental health info: NAMI HelpLine (1-800-950-6264, Mon–Fri 10am–10pm ET)`;
 
 const GROQ_MODEL = 'llama-3.1-8b-instant';
 
 const CRISIS_KEYWORDS = [
-  'suicide','suicidaire','mourir','me tuer','envie de mourir',
-  'en finir','plus envie de vivre','pensées sombres','me faire du mal',
-  'me blesser','désespéré','désespoir','plus envie de rien','me suicider'
+  'suicide','suicidal','kill myself','end my life','want to die',
+  'don\'t want to live','no reason to live','hurt myself','self-harm',
+  'self harm','cut myself','end it all','take my life','hopeless',
+  'worthless','can\'t go on','give up on life','not worth living'
 ];
 
 const apiKey = String.fromCharCode(103,115,107,95) + 'xlc8SzYzD3CyXGTzhWFVWGdyb3FYqSM0eMWIpUXy8dLyY69ezccn';
@@ -594,18 +596,18 @@ function boot() {
   history = [];
 
   setQuickReplies([
-    { label: "😔 Pas bien du tout" },
-    { label: "😰 Stressé(e)" },
-    { label: "🫂 Seul(e)" },
-    { label: "🤷 Je ne sais pas" },
+    { label: "😔 Not feeling great" },
+    { label: "😰 Stressed out" },
+    { label: "🫂 Feeling lonely" },
+    { label: "🤷 Not sure" },
   ]);
 
-  botReply("Bonjour 👋 Je suis là pour t'écouter, sans jugement.\n\nComment tu te sens en ce moment ?");
+  botReply("Hey 👋 I'm here to listen — no judgment, no pressure.\n\nHow are you feeling right now?");
 }
 
 /* ── Utilitaires ── */
 function now() {
-  return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
 function appendMsg(text, who) {
@@ -704,7 +706,7 @@ async function sendMessage(text) {
     if (detectCrisis(reply)) showCrisis();
   } catch(e) {
     hideTyping();
-    botReply("Désolé, une erreur s'est produite. Vérifie ta connexion et réessaie. 🙏");
+    botReply("Sorry, something went wrong. Please check your connection and try again. 🙏");
   }
 
   document.getElementById('user-input').disabled = false;
