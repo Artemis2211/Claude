@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soutien Étudiant — Chatbot Bien-Être</title>
+  <title>Student Support — Wellness Chatbot</title>
   <style>
-    /* ── Design tokens ── */
     :root {
       --bg:          #F4F1EC;
       --surface:     #FFFDF9;
-      --primary:     #5B8FA8;   /* bleu apaisant */
+      --primary:     #5B8FA8;
       --primary-dk:  #3E6F87;
-      --accent:      #8EBD9E;   /* vert doux */
+      --accent:      #8EBD9E;
       --crisis:      #D95F4B;
       --crisis-bg:   #FDF1EF;
       --text:        #2E2E2E;
@@ -35,7 +34,6 @@
       padding: 16px;
     }
 
-    /* ── Shell ── */
     .shell {
       width: 100%;
       max-width: 420px;
@@ -48,7 +46,6 @@
       min-height: 680px;
     }
 
-    /* ── Header ── */
     header {
       background: var(--primary);
       color: #fff;
@@ -96,7 +93,6 @@
     .nav-btn:hover { background: rgba(255,255,255,0.3); }
     .nav-btn.active { background: rgba(255,255,255,0.35); font-weight: 600; }
 
-    /* ── Crisis banner ── */
     .crisis-banner {
       background: var(--crisis-bg);
       border-left: 4px solid var(--crisis);
@@ -124,11 +120,9 @@
       display: inline-block;
     }
 
-    /* ── Views ── */
     .view { display: none; flex: 1; flex-direction: column; }
     .view.active { display: flex; }
 
-    /* ── Chat ── */
     .chat-messages {
       flex: 1;
       overflow-y: auto;
@@ -176,7 +170,6 @@
     }
     .msg.user .msg-time { text-align: right; }
 
-    /* Typing indicator */
     .typing {
       display: none;
       align-self: flex-start;
@@ -199,7 +192,6 @@
       40%          { transform: translateY(-6px); }
     }
 
-    /* Quick replies */
     .quick-replies {
       padding: 8px 14px 4px;
       display: flex;
@@ -222,7 +214,6 @@
       color: #fff;
     }
 
-    /* Input bar */
     .input-bar {
       padding: 10px 14px 14px;
       display: flex;
@@ -255,7 +246,6 @@
     }
     .send-btn:hover { background: var(--primary-dk); }
 
-    /* ── Resources view ── */
     .resources {
       flex: 1;
       overflow-y: auto;
@@ -299,7 +289,6 @@
     .res-card.crisis-card { border-left: 3px solid var(--crisis); }
     .res-card.crisis-card .res-cta { background: var(--crisis); }
 
-    /* ── Footer label ── */
     footer {
       text-align: center;
       font-size: 0.68rem;
@@ -314,31 +303,29 @@
 
 <div class="shell">
 
-  <!-- Header -->
   <header>
     <div class="avatar">🤝</div>
     <div class="header-info">
-      <div class="header-name">Soutien Étudiant</div>
+      <div class="header-name">Student Support</div>
       <div class="header-status">
         <span class="dot-online"></span>
-        Disponible 24h/24 · 7j/7
+        Available 24/7
       </div>
     </div>
     <button class="nav-btn active" id="btn-chat" onclick="showView('chat')">Chat</button>
-    <button class="nav-btn" id="btn-res" onclick="showView('resources')">Ressources</button>
+    <button class="nav-btn" id="btn-res" onclick="showView('resources')">Resources</button>
   </header>
 
-  <!-- Crisis banner (hidden until triggered) -->
   <div class="crisis-banner" id="crisis-banner">
     <span class="icon">🆘</span>
     <div class="crisis-text">
-      Si tu as des pensées sombres, tu n'es pas seul(e).<br>
-      <strong>3114</strong> — Numéro National Prévention Suicide (24h/24, gratuit)
+      If you're having dark thoughts, you're not alone.<br>
+      <strong>3114</strong> — National Suicide Prevention Line (24/7, free)
     </div>
     <a href="tel:3114" class="crisis-call">📞 3114</a>
   </div>
 
-  <!-- ── Chat view ── -->
+  <!-- Chat view -->
   <div class="view active" id="view-chat">
     <div class="chat-messages" id="messages">
       <div class="typing" id="typing">
@@ -350,23 +337,23 @@
 
     <div class="input-bar">
       <input type="text" id="user-input"
-        placeholder="Écris quelque chose…"
+        placeholder="Type something…"
         onkeydown="if(event.key==='Enter') sendText()" />
       <button class="send-btn" onclick="sendText()">➤</button>
     </div>
   </div>
 
-  <!-- ── Resources view ── -->
+  <!-- Resources view -->
   <div class="view" id="view-resources">
     <div class="resources">
-      <div class="res-title">Ressources d'aide 💙</div>
+      <div class="res-title">Help Resources 💙</div>
 
       <div class="res-card crisis-card">
         <div class="res-icon">🆘</div>
         <div>
-          <div class="res-name">3114 — Prévention Suicide</div>
-          <div class="res-desc">Numéro national gratuit, disponible 24h/24, 7j/7. Des professionnels de santé à l'écoute si tu traverses une crise.</div>
-          <a href="tel:3114" class="res-cta">Appeler le 3114</a>
+          <div class="res-name">3114 — Suicide Prevention</div>
+          <div class="res-desc">Free national line, available 24/7. Mental health professionals ready to listen if you're going through a crisis.</div>
+          <a href="tel:3114" class="res-cta">Call 3114</a>
         </div>
       </div>
 
@@ -374,17 +361,17 @@
         <div class="res-icon">🌙</div>
         <div>
           <div class="res-name">Nightline France</div>
-          <div class="res-desc">Ligne d'écoute tenue par des étudiant(e)s bénévoles. Chaque soir de 21h à 2h30. Anonyme et gratuite.</div>
-          <button class="res-cta" onclick="alert('nightline.fr · 0800 235 236')">Infos Nightline</button>
+          <div class="res-desc">Listening line run by volunteer students. Every evening from 9pm to 2:30am. Anonymous and free.</div>
+          <button class="res-cta" onclick="alert('nightline.fr · 0800 235 236')">Nightline info</button>
         </div>
       </div>
 
       <div class="res-card">
         <div class="res-icon">🏥</div>
         <div>
-          <div class="res-name">SSU — Service de Santé Universitaire</div>
-          <div class="res-desc">Consultations médicales et psychologiques gratuites ou à tarif réduit pour les étudiants inscrits. Prends RDV via ton université.</div>
-          <button class="res-cta" onclick="alert('Contacte le SSU de ton université.')">Trouver mon SSU</button>
+          <div class="res-name">SSU — University Health Service</div>
+          <div class="res-desc">Free or low-cost medical and psychological consultations for enrolled students.</div>
+          <button class="res-cta" onclick="alert('Contact the SSU at your university.')">Find my SSU</button>
         </div>
       </div>
 
@@ -392,8 +379,8 @@
         <div class="res-icon">💬</div>
         <div>
           <div class="res-name">Fil Santé Jeunes</div>
-          <div class="res-desc">0 800 235 236 — appel, chat ou email. Gratuit pour les 12–25 ans. Santé physique, mentale, vie quotidienne.</div>
-          <a href="tel:0800235236" class="res-cta">Appeler</a>
+          <div class="res-desc">0 800 235 236 — call, chat or email. Free for ages 12–25.</div>
+          <a href="tel:0800235236" class="res-cta">Call</a>
         </div>
       </div>
 
@@ -401,225 +388,222 @@
         <div class="res-icon">🧘</div>
         <div>
           <div class="res-name">Santé Psy Étudiant</div>
-          <div class="res-desc">Jusqu'à 8 séances de suivi psychologique gratuit remboursées pour les étudiants. Dispositif national Ségur.</div>
-          <button class="res-cta" onclick="alert('santepsy.sante.gouv.fr')">En savoir plus</button>
+          <div class="res-desc">Up to 8 free psychological follow-up sessions for students. National program.</div>
+          <button class="res-cta" onclick="alert('santepsy.sante.gouv.fr')">Learn more</button>
         </div>
       </div>
     </div>
   </div>
 
-  <footer>Lo-Fi Prototype v0.1 — à des fins de démonstration uniquement</footer>
+  <footer>Lo-Fi Prototype v0.1 — for demonstration purposes only</footer>
 </div>
 
 <script>
-/* ─────────────────────────────────────────
-   CONVERSATION SCRIPT
-   ───────────────────────────────────────── */
-
-// Crisis keywords — trigger the banner
 const CRISIS_KEYWORDS = [
+  // French
   'suicide','suicidaire','mourir','me tuer','envie de mourir',
   'en finir','plus envie de vivre','pensées sombres','me faire du mal',
-  'me blesser','désespéré','désespoir','plus envie de rien'
+  'me blesser','désespéré','désespoir','plus envie de rien',
+  // English
+  'kill myself','end my life','want to die','suicidal','hurt myself',
+  'self-harm','no reason to live','ending it all','hopeless','no point living'
 ];
 
-// State
 let step = 'init';
 let crisisShown = false;
 
-/* ── Conversation tree ──────────────────── */
 const FLOWS = {
 
   init: {
-    bot: "Bonjour 👋 Je suis là pour t'écouter, sans jugement.\n\nComment tu te sens en ce moment ?",
+    bot: "Hey 👋 I'm here to listen, no judgment at all.\n\nHow are you feeling right now?",
     replies: [
-      { label: "😔 Pas bien du tout", next: 'pasbien' },
-      { label: "😰 Stressé(e)",        next: 'stress'  },
-      { label: "🫂 Seul(e)",            next: 'seul'    },
-      { label: "🤷 Je ne sais pas",    next: 'saispa'  },
+      { label: "😔 Not doing well at all", next: 'pasbien' },
+      { label: "😰 Stressed out",          next: 'stress'  },
+      { label: "🫂 Feeling lonely",         next: 'seul'    },
+      { label: "🤷 I'm not sure",           next: 'saispa'  },
     ]
   },
 
-  /* ── Branche : Pas bien du tout ── */
+  /* ── Branch: Not doing well ── */
   pasbien: {
-    bot: "Je suis désolé(e) d'entendre ça. 💙\n\nEst-ce que tu peux me dire depuis combien de temps tu te sens comme ça ?",
+    bot: "I'm sorry to hear that. 💙\n\nCan you tell me how long you've been feeling this way?",
     replies: [
-      { label: "Depuis quelques jours", next: 'pasbien_court' },
-      { label: "Depuis plusieurs semaines", next: 'pasbien_long' },
-      { label: "Je ne sais pas vraiment", next: 'pasbien_court' },
+      { label: "A few days",          next: 'pasbien_court' },
+      { label: "Several weeks",       next: 'pasbien_long'  },
+      { label: "I'm not really sure", next: 'pasbien_court' },
     ]
   },
   pasbien_court: {
-    bot: "Merci de me le dire. Il est normal de traverser des périodes difficiles.\n\nAs-tu quelqu'un à qui en parler — un ami, la famille ?",
+    bot: "Thank you for telling me. It's normal to go through difficult periods.\n\nDo you have someone to talk to — a friend, family member?",
     replies: [
-      { label: "Oui, j'ai du soutien", next: 'soutien_oui' },
-      { label: "Non, je suis seul(e)", next: 'soutien_non' },
+      { label: "Yes, I have support",   next: 'soutien_oui' },
+      { label: "No, I'm on my own",     next: 'soutien_non' },
     ]
   },
   pasbien_long: {
-    bot: "Plusieurs semaines, c'est long à porter seul(e). Tu mérites un vrai soutien.\n\nAs-tu pensé à parler à un professionnel de santé ?",
+    bot: "Several weeks is a long time to carry that alone. You deserve real support.\n\nHave you thought about talking to a professional?",
     replies: [
-      { label: "J'ai déjà essayé", next: 'pro_essaye' },
-      { label: "Je ne sais pas comment faire", next: 'pro_comment' },
-      { label: "J'ai peur du jugement", next: 'pro_peur' },
+      { label: "I've already tried",           next: 'pro_essaye' },
+      { label: "I don't know how to",          next: 'pro_comment' },
+      { label: "I'm afraid of being judged",   next: 'pro_peur'   },
     ]
   },
 
-  /* ── Branche : Stress ── */
+  /* ── Branch: Stress ── */
   stress: {
-    bot: "Le stress étudiant est réel et épuisant. 😮‍💨\n\nD'où vient principalement ton stress ?",
+    bot: "Student stress is real and exhausting. 😮‍💨\n\nWhat's mainly causing your stress?",
     replies: [
-      { label: "Les examens / le travail", next: 'stress_exam' },
-      { label: "La vie sociale / la famille", next: 'stress_social' },
-      { label: "Le logement / l'argent",     next: 'stress_mat' },
-      { label: "Tout à la fois",             next: 'stress_tout' },
+      { label: "Exams / coursework",       next: 'stress_exam'   },
+      { label: "Social life / family",     next: 'stress_social' },
+      { label: "Housing / money",          next: 'stress_mat'    },
+      { label: "Everything all at once",   next: 'stress_tout'   },
     ]
   },
   stress_exam: {
-    bot: "La pression académique peut être écrasante. Tu n'es pas seul(e) dans cette situation.\n\nEst-ce que tu arrives à te ménager des pauses ?",
+    bot: "Academic pressure can be overwhelming. You're not alone in this.\n\nAre you managing to take breaks?",
     replies: [
-      { label: "Oui, j'essaie", next: 'stress_bien' },
-      { label: "Non, pas vraiment", next: 'stress_mal' },
+      { label: "Yes, I'm trying",    next: 'stress_bien' },
+      { label: "Not really",         next: 'stress_mal'  },
     ]
   },
   stress_social: {
-    bot: "Les relations peuvent peser lourd sur notre moral. C'est courageux de le reconnaître.\n\nEst-ce qu'il y a quelque chose de précis qui te pèse ?",
+    bot: "Relationships can weigh heavily on our mood. It takes courage to recognise that.\n\nIs there something specific that's bothering you?",
     replies: [
-      { label: "Un conflit avec quelqu'un", next: 'stress_mal' },
-      { label: "Je me sens exclu(e)",        next: 'seul'      },
-      { label: "Je préfère ne pas détailler", next: 'stress_bien' },
+      { label: "A conflict with someone",   next: 'stress_mal'  },
+      { label: "I feel excluded",           next: 'seul'        },
+      { label: "I'd rather not go into it", next: 'stress_bien' },
     ]
   },
   stress_mat: {
-    bot: "Les difficultés matérielles ajoutent une pression immense. Il existe des aides pour les étudiants.\n\nAs-tu accès au CROUS ou aux services sociaux de ton université ?",
+    bot: "Financial difficulties add an enormous amount of pressure. There are support options for students.\n\nDo you have access to your university's student services or financial aid?",
     replies: [
-      { label: "Oui, je connais", next: 'stress_bien' },
-      { label: "Non, comment faire ?", next: 'ressources_mat' },
+      { label: "Yes, I know about them",  next: 'stress_bien'   },
+      { label: "No, how do I access them?", next: 'ressources_mat' },
     ]
   },
   stress_tout: {
-    bot: "Quand tout s'accumule, même respirer devient difficile. C'est beaucoup à gérer seul(e).\n\nQu'est-ce qui te semblerait le plus urgent à alléger en ce moment ?",
+    bot: "When everything piles up, even breathing feels hard. That's a lot to handle alone.\n\nWhat feels most urgent to tackle right now?",
     replies: [
-      { label: "Le côté académique",  next: 'stress_exam' },
-      { label: "Le côté émotionnel",  next: 'pasbien'     },
-      { label: "Je ne sais pas",      next: 'pro_comment' },
+      { label: "The academic side",    next: 'stress_exam' },
+      { label: "The emotional side",   next: 'pasbien'     },
+      { label: "I don't know",         next: 'pro_comment' },
     ]
   },
   stress_bien: {
-    bot: "C'est bien de prendre soin de toi. 🌱\n\nN'oublie pas que les ressources du SSU et de Santé Psy Étudiant sont là si tu en as besoin.",
-    replies: [{ label: "Merci 🙏", next: 'fin' }]
+    bot: "It's great that you're taking care of yourself. 🌱\n\nRemember, your university's counselling service is there if you ever need it.",
+    replies: [{ label: "Thank you 🙏", next: 'fin' }]
   },
   stress_mal: {
-    bot: "S'accorder du repos n'est pas une faiblesse, c'est une nécessité. 💙\n\nLe SSU de ton université propose souvent un soutien psychologique gratuit. Tu veux en savoir plus ?",
+    bot: "Rest isn't a weakness — it's a necessity. 💙\n\nYour university's health service often offers free psychological support. Would you like to know more?",
     replies: [
-      { label: "Oui, dis-moi en plus", next: 'pro_comment' },
-      { label: "Pas pour l'instant",   next: 'fin'         },
+      { label: "Yes, tell me more",  next: 'pro_comment' },
+      { label: "Not right now",      next: 'fin'         },
     ]
   },
 
-  /* ── Branche : Seul(e) ── */
+  /* ── Branch: Lonely ── */
   seul: {
-    bot: "Se sentir seul(e) parmi des centaines d'étudiant(e)s, c'est paradoxal et douloureux. Tu n'as pas à rester là tout seul(e).\n\nEst-ce que c'est une solitude récente ou depuis longtemps ?",
+    bot: "Feeling lonely among hundreds of students is both paradoxical and painful. You don't have to stay there alone.\n\nIs this a recent feeling, or has it been going on for a while?",
     replies: [
-      { label: "Plutôt récente", next: 'seul_recent' },
-      { label: "Depuis longtemps", next: 'seul_long' },
+      { label: "Fairly recent",      next: 'seul_recent' },
+      { label: "For a long time",    next: 'seul_long'   },
     ]
   },
   seul_recent: {
-    bot: "Un changement de vie (nouvelle ville, université…) peut provoquer un isolement temporaire. C'est normal, même si c'est douloureux.\n\nAs-tu des activités, associations ou clubs où tu pourrais rencontrer des gens ?",
+    bot: "A big life change (new city, university…) can bring temporary isolation. It's normal, even if it's painful.\n\nAre there any clubs, societies or activities where you could meet people?",
     replies: [
-      { label: "J'ai essayé, ça ne prend pas", next: 'seul_long' },
-      { label: "Pas encore, bonne idée",        next: 'fin'       },
-      { label: "Je n'ai pas l'énergie",         next: 'pasbien'   },
+      { label: "I've tried, it's not clicking", next: 'seul_long' },
+      { label: "Not yet — good idea",            next: 'fin'       },
+      { label: "I don't have the energy",        next: 'pasbien'   },
     ]
   },
   seul_long: {
-    bot: "Un isolement qui dure peut peser très lourd. Tu mérites de te sentir entouré(e).\n\nLa Nightline — tenue par des étudiants bénévoles — est disponible chaque soir. Ça peut être un premier pas.",
+    bot: "Long-term isolation can weigh very heavily. You deserve to feel surrounded.\n\nNightline — run by volunteer students — is available every evening. It could be a first step.",
     replies: [
-      { label: "Je vais essayer Nightline", next: 'fin' },
-      { label: "J'aimerais parler à un psy", next: 'pro_comment' },
+      { label: "I'll try Nightline",        next: 'fin'         },
+      { label: "I'd like to see a therapist", next: 'pro_comment' },
     ]
   },
 
-  /* ── Branche : Je ne sais pas ── */
+  /* ── Branch: Not sure ── */
   saispa: {
-    bot: "C'est déjà bien de chercher à mettre des mots sur ce que tu ressens. 🌿\n\nEst-ce que physiquement tu te sens comment ? Tu dors, tu manges correctement ?",
+    bot: "It's already good that you're trying to put words to what you feel. 🌿\n\nPhysically, how are you doing? Are you sleeping and eating okay?",
     replies: [
-      { label: "Pas vraiment, non", next: 'pasbien'   },
-      { label: "Ça va à peu près",  next: 'saispa2'   },
+      { label: "Not really, no",   next: 'pasbien' },
+      { label: "More or less",     next: 'saispa2' },
     ]
   },
   saispa2: {
-    bot: "Parfois on a juste besoin de parler sans savoir exactement pourquoi. C'est totalement valable.\n\nEst-ce qu'il y a quelque chose qui t'occupe l'esprit en ce moment ?",
+    bot: "Sometimes you just need to talk without knowing exactly why. That's completely valid.\n\nIs there something on your mind right now?",
     replies: [
-      { label: "Oui, un peu",     next: 'pasbien'   },
-      { label: "Pas vraiment",    next: 'fin'        },
-      { label: "J'ai des pensées qui me font peur", next: 'crisis_direct' },
+      { label: "Yes, a bit",                      next: 'pasbien'      },
+      { label: "Not really",                      next: 'fin'          },
+      { label: "I'm having thoughts that scare me", next: 'crisis_direct' },
     ]
   },
 
-  /* ── Pro ── */
+  /* ── Professional help ── */
   pro_essaye: {
-    bot: "C'est courageux d'avoir essayé. Parfois il faut trouver le bon professionnel, celui avec qui on se sent à l'aise.\n\nLe dispositif Santé Psy Étudiant permet 8 séances gratuites. Tu peux essayer un autre suivi.",
-    replies: [{ label: "Je vais voir", next: 'fin' }]
+    bot: "It took courage to try. Sometimes it takes finding the right professional — someone you feel comfortable with.\n\nDon't give up: the Santé Psy Étudiant programme offers 8 free sessions. You can try a different approach.",
+    replies: [{ label: "I'll look into it", next: 'fin' }]
   },
   pro_comment: {
-    bot: "Voici comment accéder à un soutien gratuit :\n\n1. Contacte le SSU de ton université\n2. Utilise le dispositif Santé Psy Étudiant (santepsy.sante.gouv.fr)\n3. Appelle le Fil Santé Jeunes : 0 800 235 236\n\nTu n'as pas à gérer ça seul(e). 💙",
+    bot: "Here's how to access free support:\n\n1. Contact your university's health service (SSU)\n2. Use the Santé Psy Étudiant programme (santepsy.sante.gouv.fr)\n3. Call Fil Santé Jeunes: 0 800 235 236\n\nYou don't have to handle this alone. 💙",
     replies: [
-      { label: "Merci pour ces infos", next: 'fin' },
-      { label: "Voir toutes les ressources", action: 'resources' },
+      { label: "Thanks for the info",       next: 'fin'       },
+      { label: "See all resources",         action: 'resources' },
     ]
   },
   pro_peur: {
-    bot: "La peur du jugement est très compréhensible. Mais les professionnels de santé sont là pour aider, pas pour juger.\n\nLa confidentialité est garantie. Tout ce que tu dis reste entre toi et le professionnel.",
+    bot: "Fear of being judged is very understandable. But mental health professionals are there to help, not judge.\n\nConfidentiality is guaranteed. Everything you say stays between you and the professional.",
     replies: [
-      { label: "Ça me rassure un peu", next: 'pro_comment' },
-      { label: "J'ai encore besoin d'y réfléchir", next: 'fin' },
+      { label: "That reassures me a little",   next: 'pro_comment' },
+      { label: "I still need to think about it", next: 'fin'         },
     ]
   },
 
-  /* ── Soutien ── */
+  /* ── Support ── */
   soutien_oui: {
-    bot: "C'est une vraie force d'avoir du soutien autour de soi. 💙\n\nN'hésite pas à en parler à ces personnes. Et si jamais tu as besoin d'un soutien professionnel en plus, le SSU est là.",
-    replies: [{ label: "Merci 🙏", next: 'fin' }]
+    bot: "Having people around you is a real strength. 💙\n\nDon't hesitate to lean on them. And if you ever need professional support too, your university's health service is there.",
+    replies: [{ label: "Thank you 🙏", next: 'fin' }]
   },
   soutien_non: {
-    bot: "Je suis content(e) que tu m'en parles. Tu n'as pas à rester seul(e) avec ça.\n\nLa Nightline est tenue par des étudiants bénévoles, chaque soir jusqu'à 2h30. Anonyme et gratuit.",
+    bot: "I'm glad you're talking to me. You don't have to face this alone.\n\nNightline is run by volunteer students, every evening until 2:30am. Anonymous and free.",
     replies: [
-      { label: "Je vais appeler Nightline",   next: 'fin'         },
-      { label: "Je préfère parler à un psy",  next: 'pro_comment' },
+      { label: "I'll call Nightline",      next: 'fin'         },
+      { label: "I'd prefer to see a therapist", next: 'pro_comment' },
     ]
   },
 
-  /* ── Ressources matérielles ── */
+  /* ── Material resources ── */
   ressources_mat: {
-    bot: "Pour les difficultés matérielles, plusieurs aides existent :\n\n• Aides d'urgence du CROUS\n• Assistante sociale de ton université\n• Épiceries solidaires étudiantes\n\nDemande au bureau de la vie étudiante (BVE) de ton université.",
-    replies: [{ label: "Merci pour l'info", next: 'fin' }]
+    bot: "Several forms of support exist for financial difficulties:\n\n• Emergency grants from your university\n• University social worker\n• Student food banks\n\nAsk at your university's student life office.",
+    replies: [{ label: "Thanks for the info", next: 'fin' }]
   },
 
-  /* ── Crise directe ── */
+  /* ── Direct crisis ── */
   crisis_direct: {
-    bot: "Merci de me faire confiance avec ça. Ce que tu ressens est sérieux et tu mérites de l'aide maintenant.\n\nLe 3114 est là pour toi, 24h/24, gratuit et confidentiel. Des professionnels formés répondront sans te juger.",
+    bot: "Thank you for trusting me with that. What you're feeling is serious and you deserve help right now.\n\n3114 is there for you, 24/7, free and confidential. Trained professionals will listen without judgment.",
     replies: [
-      { label: "Je vais appeler le 3114", next: 'fin' },
-      { label: "Je ne suis pas prêt(e)", next: 'fin'  },
+      { label: "I'll call 3114",      next: 'fin' },
+      { label: "I'm not ready yet",   next: 'fin' },
     ],
     crisis: true
   },
 
-  /* ── Fin ── */
+  /* ── End ── */
   fin: {
-    bot: "Prendre soin de toi, c'est la chose la plus courageuse que tu puisses faire. 🌱\n\nJe suis là si tu veux continuer à en parler. Tu peux aussi consulter l'onglet Ressources à tout moment.",
+    bot: "Taking care of yourself is the most courageous thing you can do. 🌱\n\nI'm here if you want to keep talking. You can also check the Resources tab at any time.",
     replies: [
-      { label: "Recommencer", next: 'init' },
-      { label: "Voir les ressources", action: 'resources' },
+      { label: "Start over",       next: 'init'      },
+      { label: "See resources",    action: 'resources' },
     ]
   }
 };
 
 /* ── Utilities ── */
 function now() {
-  return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
 
 function appendMsg(text, who) {
@@ -681,7 +665,6 @@ function detectCrisis(text) {
   return CRISIS_KEYWORDS.some(k => t.includes(k));
 }
 
-/* ── Free-text send ── */
 function sendText() {
   const inp = document.getElementById('user-input');
   const val = inp.value.trim();
@@ -696,18 +679,16 @@ function sendText() {
     return;
   }
 
-  // Simple keyword routing
   const t = val.toLowerCase();
   let next = 'fin';
-  if (/stress|exam|travail|pression|anxieu/.test(t)) next = 'stress';
-  else if (/seul|isolé|ami|ami/.test(t)) next = 'seul';
-  else if (/triste|mal|déprim|pleur|fatig|épuis/.test(t)) next = 'pasbien';
-  else if (/psy|aide|soutien|professionnel/.test(t)) next = 'pro_comment';
+  if (/stress|exam|work|pressure|anxi/.test(t))           next = 'stress';
+  else if (/alone|lonely|isol|friend/.test(t))            next = 'seul';
+  else if (/sad|bad|depress|cry|tired|exhaust/.test(t))   next = 'pasbien';
+  else if (/therap|help|support|professional/.test(t))    next = 'pro_comment';
 
   setTimeout(() => runStep(next), 500);
 }
 
-/* ── View switcher ── */
 function showView(name) {
   document.getElementById('view-chat').classList.toggle('active', name === 'chat');
   document.getElementById('view-resources').classList.toggle('active', name === 'resources');
@@ -715,7 +696,6 @@ function showView(name) {
   document.getElementById('btn-res').classList.toggle('active', name === 'resources');
 }
 
-/* ── Boot ── */
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => runStep('init'), 600);
 });
