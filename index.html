@@ -273,16 +273,16 @@
 <!-- ── Setup overlay ── -->
 <div class="setup-overlay" id="setup-overlay">
   <div class="setup-card">
-    <h2>🔑 Clé API Google Gemini</h2>
-    <p>Ce chatbot utilise Gemini (IA de Google) pour répondre. La clé est <strong>gratuite</strong>, sans carte bancaire.</p>
-    <ol style="font-size:0.8rem;color:#555;line-height:1.7;margin-bottom:14px;padding-left:18px;">
-      <li>Va sur <strong>aistudio.google.com</strong></li>
-      <li>Connecte-toi avec ton compte Google</li>
-      <li>Clique sur <strong>"Get API key"</strong> → <strong>"Create API key"</strong></li>
+    <h2>🔑 Clé API Groq — 100% gratuite</h2>
+    <p>Ce chatbot utilise Groq (IA gratuite, sans carte bancaire). Crée ta clé en 1 minute :</p>
+    <ol style="font-size:0.8rem;color:#555;line-height:1.8;margin-bottom:14px;padding-left:18px;">
+      <li>Va sur <strong>console.groq.com</strong></li>
+      <li>Inscris-toi avec ton email (ou Google)</li>
+      <li>Clique <strong>"API Keys"</strong> → <strong>"Create API Key"</strong></li>
       <li>Copie-colle la clé ici 👇</li>
     </ol>
     <div class="setup-error" id="setup-error">Clé invalide ou erreur réseau. Vérifie ta clé.</div>
-    <input type="password" id="api-key-input" placeholder="AIza..." />
+    <input type="password" id="api-key-input" placeholder="gsk_..." />
     <button class="setup-btn" onclick="startChat()">Commencer →</button>
     <p class="setup-note">Ta clé est stockée dans ton navigateur uniquement et n'est jamais partagée.</p>
   </div>
@@ -374,7 +374,7 @@
     </div>
   </div>
 
-  <footer>Propulsé par Gemini (Google) · v1.0</footer>
+  <footer>Propulsé par Groq · Llama 3.1 · v1.0</footer>
 </div>
 
 <script>
@@ -403,7 +403,7 @@ RESSOURCES À MENTIONNER SELON LE CONTEXTE :
 - Crise / urgence : 3114
 - 12-25 ans, tout sujet : Fil Santé Jeunes (0800 235 236)`;
 
-const GEMINI_MODEL = 'gemini-1.5-flash-latest';
+const GROQ_MODEL = 'llama-3.1-8b-instant';
 
 const CRISIS_KEYWORDS = [
   'suicide','suicidaire','mourir','me tuer','envie de mourir',
@@ -418,7 +418,7 @@ let busy = false;
 
 /* ── Setup ── */
 window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('gemini_key');
+  const saved = localStorage.getItem('groq_key');
   if (saved) {
     apiKey = saved;
     document.getElementById('setup-overlay').classList.add('hidden');
@@ -434,8 +434,8 @@ async function startChat() {
   const err = document.getElementById('setup-error');
   err.style.display = 'none';
 
-  if (!key.startsWith('AIza')) {
-    err.textContent = 'La clé doit commencer par AIza…';
+  if (!key.startsWith('gsk_')) {
+    err.textContent = 'La clé doit commencer par gsk_…';
     err.style.display = 'block';
     return;
   }
@@ -445,9 +445,9 @@ async function startChat() {
   btn.disabled = true;
 
   try {
-    await callGemini(key, [{ role: 'user', content: 'Dis juste ok.' }]);
+    await callGroq(key, [{ role: 'user', content: 'Dis juste ok.' }]);
     apiKey = key;
-    localStorage.setItem('gemini_key', key);
+    localStorage.setItem('groq_key', key);
     document.getElementById('setup-overlay').classList.add('hidden');
     boot();
   } catch(e) {
@@ -528,30 +528,28 @@ function detectCrisis(text) {
   return CRISIS_KEYWORDS.some(k => t.includes(k));
 }
 
-/* ── API Gemini ── */
-async function callGemini(key, messages) {
-  // Convertit l'historique {role, content} → format Gemini {role, parts}
-  const contents = messages.map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }]
-  }));
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
-    {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents,
-        generationConfig: { maxOutputTokens: 400, temperature: 0.7 }
-      })
-    }
-  );
+/* ── API Groq ── */
+async function callGroq(key, messages) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${key}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: GROQ_MODEL,
+      max_tokens: 400,
+      temperature: 0.7,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...messages
+      ]
+    })
+  });
 
   if (!res.ok) throw new Error(`API error ${res.status}`);
   const data = await res.json();
-  return data.candidates[0].content.parts[0].text;
+  return data.choices[0].message.content;
 }
 
 /* ── Send ── */
@@ -571,7 +569,7 @@ async function sendMessage(text) {
   showTyping();
 
   try {
-    const reply = await callGemini(apiKey, history);
+    const reply = await callGroq(apiKey, history);
     hideTyping();
     botReply(reply);
 
