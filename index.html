@@ -146,7 +146,6 @@
       align-items: center;
       gap: 14px;
       position: relative;
-      overflow: hidden;
     }
     /* Cercles décoratifs dans l'en-tête */
     header::before {
@@ -196,7 +195,7 @@
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-    .nav-btns { display: flex; gap: 6px; }
+    .nav-btns { display: flex; gap: 6px; flex-shrink: 0; }
     .nav-btn {
       background: rgba(255,255,255,0.15);
       border: 1.5px solid rgba(255,255,255,0.28);
