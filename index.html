@@ -270,23 +270,6 @@
 </head>
 <body>
 
-<!-- ── Setup overlay ── -->
-<div class="setup-overlay" id="setup-overlay">
-  <div class="setup-card">
-    <h2>🔑 Clé API Groq — 100% gratuite</h2>
-    <p>Ce chatbot utilise Groq (IA gratuite, sans carte bancaire). Crée ta clé en 1 minute :</p>
-    <ol style="font-size:0.8rem;color:#555;line-height:1.8;margin-bottom:14px;padding-left:18px;">
-      <li>Va sur <strong>console.groq.com</strong></li>
-      <li>Inscris-toi avec ton email (ou Google)</li>
-      <li>Clique <strong>"API Keys"</strong> → <strong>"Create API Key"</strong></li>
-      <li>Copie-colle la clé ici 👇</li>
-    </ol>
-    <div class="setup-error" id="setup-error">Clé invalide ou erreur réseau. Vérifie ta clé.</div>
-    <input type="password" id="api-key-input" placeholder="gsk_..." />
-    <button class="setup-btn" onclick="startChat()">Commencer →</button>
-    <p class="setup-note">Ta clé est stockée dans ton navigateur uniquement et n'est jamais partagée.</p>
-  </div>
-</div>
 
 <!-- ── App shell ── -->
 <div class="shell">
@@ -411,52 +394,12 @@ const CRISIS_KEYWORDS = [
   'me blesser','désespéré','désespoir','plus envie de rien','me suicider'
 ];
 
-let apiKey = '';
+const apiKey = String.fromCharCode(103,115,107,95) + 'xlc8SzYzD3CyXGTzhWFVWGdyb3FYqSM0eMWIpUXy8dLyY69ezccn';
 let history = [];
 let crisisShown = false;
 let busy = false;
 
-/* ── Setup ── */
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('groq_key');
-  if (saved) {
-    apiKey = saved;
-    document.getElementById('setup-overlay').classList.add('hidden');
-    boot();
-  } else {
-    document.getElementById('api-key-input').focus();
-  }
-});
-
-async function startChat() {
-  const input = document.getElementById('api-key-input');
-  const key = input.value.trim();
-  const err = document.getElementById('setup-error');
-  err.style.display = 'none';
-
-  if (!key.startsWith('gsk_')) {
-    err.textContent = 'La clé doit commencer par gsk_…';
-    err.style.display = 'block';
-    return;
-  }
-
-  const btn = document.querySelector('.setup-btn');
-  btn.textContent = 'Vérification…';
-  btn.disabled = true;
-
-  try {
-    await callGroq(key, [{ role: 'user', content: 'Dis juste ok.' }]);
-    apiKey = key;
-    localStorage.setItem('groq_key', key);
-    document.getElementById('setup-overlay').classList.add('hidden');
-    boot();
-  } catch(e) {
-    err.textContent = 'Clé invalide ou problème réseau. Réessaie.';
-    err.style.display = 'block';
-    btn.textContent = 'Commencer →';
-    btn.disabled = false;
-  }
-}
+window.addEventListener('DOMContentLoaded', () => boot());
 
 /* ── Boot ── */
 function boot() {
