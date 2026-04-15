@@ -28,17 +28,17 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { height: 100%; }
+
     body {
       font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
-      min-height: 100vh;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      position: relative;
+      align-items: stretch;
       background: #F2EEFF;
       overflow: hidden;
+      position: relative;
     }
 
     /* ── Déco blobs de fond ── */
@@ -51,34 +51,90 @@
       z-index: 0;
     }
     .bg-blob-1 {
-      width: 480px; height: 480px;
+      width: 600px; height: 600px;
       background: radial-gradient(circle, #C9B8FF, transparent 70%);
-      top: -160px; right: -140px;
+      top: -200px; right: -160px;
     }
     .bg-blob-2 {
-      width: 380px; height: 380px;
+      width: 500px; height: 500px;
       background: radial-gradient(circle, #FFB499, transparent 70%);
-      bottom: -100px; left: -100px;
+      bottom: -140px; left: -120px;
     }
     .bg-blob-3 {
-      width: 260px; height: 260px;
+      width: 340px; height: 340px;
       background: radial-gradient(circle, #A8D8F0, transparent 70%);
-      top: 40%; left: -80px;
+      top: 40%; left: -100px;
     }
 
-    /* ── Shell ── */
+    /* ── Shell — plein écran sur mobile ── */
     .shell {
       width: 100%;
-      max-width: 440px;
-      background: var(--surface);
-      border-radius: 28px;
-      box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,0.7);
+      flex: 1;
+      background: rgba(255, 252, 254, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 0;
+      box-shadow: none;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      min-height: 680px;
+      height: 100dvh;
       position: relative;
       z-index: 1;
+    }
+
+    /* ── Tablette : carte centrée ── */
+    @media (min-width: 540px) and (max-width: 1023px) {
+      body {
+        padding: 24px;
+        align-items: center;
+        justify-content: center;
+      }
+      .shell {
+        max-width: 480px;
+        border-radius: 28px;
+        box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,0.7);
+        height: calc(100dvh - 48px);
+        max-height: 820px;
+        min-height: 580px;
+        flex: none;
+      }
+    }
+
+    /* ── Desktop : plein écran, contenu centré ── */
+    @media (min-width: 1024px) {
+      .chat-messages {
+        padding-left: max(24px, calc(50% - 380px));
+        padding-right: max(24px, calc(50% - 380px));
+      }
+      .quick-replies {
+        padding-left: max(24px, calc(50% - 380px));
+        padding-right: max(24px, calc(50% - 380px));
+      }
+      .input-bar {
+        padding-left: max(24px, calc(50% - 380px));
+        padding-right: max(24px, calc(50% - 380px));
+        padding-bottom: 28px;
+      }
+      .resources {
+        padding-left: max(24px, calc(50% - 480px));
+        padding-right: max(24px, calc(50% - 480px));
+      }
+      .res-cards-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .res-cards-grid .res-card { margin-bottom: 0; }
+      header {
+        padding-left: max(28px, calc(50% - 600px));
+        padding-right: max(28px, calc(50% - 600px));
+      }
+      .crisis-banner {
+        padding-left: max(28px, calc(50% - 600px));
+        padding-right: max(28px, calc(50% - 600px));
+      }
+      .msg { max-width: 62%; }
     }
 
     /* ── Header ── */
@@ -448,37 +504,39 @@
         </div>
       </div>
 
-      <div class="res-card">
-        <div class="res-icon blue">🌙</div>
-        <div>
-          <div class="res-name">Nightline France</div>
-          <div class="res-desc">Ligne d'écoute tenue par des étudiant(e)s bénévoles. Chaque soir de 21h à 2h30. Anonyme et gratuite.</div>
-          <a href="tel:0800235236" class="res-cta">0800 235 236</a>
+      <div class="res-cards-grid">
+        <div class="res-card">
+          <div class="res-icon blue">🌙</div>
+          <div>
+            <div class="res-name">Nightline France</div>
+            <div class="res-desc">Ligne d'écoute par des étudiant(e)s bénévoles. Chaque soir de 21h à 2h30. Anonyme et gratuite.</div>
+            <a href="tel:0800235236" class="res-cta">0800 235 236</a>
+          </div>
         </div>
-      </div>
 
-      <div class="res-card">
-        <div class="res-icon green">🏥</div>
-        <div>
-          <div class="res-name">SSU — Service de Santé Universitaire</div>
-          <div class="res-desc">Consultations médicales et psychologiques gratuites ou à tarif réduit pour les étudiants inscrits.</div>
+        <div class="res-card">
+          <div class="res-icon green">🏥</div>
+          <div>
+            <div class="res-name">SSU — Santé Universitaire</div>
+            <div class="res-desc">Consultations médicales et psychologiques gratuites ou à tarif réduit pour les étudiants.</div>
+          </div>
         </div>
-      </div>
 
-      <div class="res-card">
-        <div class="res-icon peach">💬</div>
-        <div>
-          <div class="res-name">Fil Santé Jeunes</div>
-          <div class="res-desc">0 800 235 236 — appel, chat ou email. Gratuit pour les 12–25 ans.</div>
-          <a href="tel:0800235236" class="res-cta">Appeler</a>
+        <div class="res-card">
+          <div class="res-icon peach">💬</div>
+          <div>
+            <div class="res-name">Fil Santé Jeunes</div>
+            <div class="res-desc">0 800 235 236 — appel, chat ou email. Gratuit pour les 12–25 ans.</div>
+            <a href="tel:0800235236" class="res-cta">Appeler</a>
+          </div>
         </div>
-      </div>
 
-      <div class="res-card">
-        <div class="res-icon yellow">🧘</div>
-        <div>
-          <div class="res-name">Santé Psy Étudiant</div>
-          <div class="res-desc">Jusqu'à 8 séances de suivi psychologique gratuites pour les étudiants. Dispositif national.</div>
+        <div class="res-card">
+          <div class="res-icon yellow">🧘</div>
+          <div>
+            <div class="res-name">Santé Psy Étudiant</div>
+            <div class="res-desc">Jusqu'à 8 séances de suivi psychologique gratuites pour les étudiants. Dispositif national.</div>
+          </div>
         </div>
       </div>
     </div>
