@@ -429,6 +429,59 @@
     }
     .res-card.crisis-card .res-cta:hover { background: var(--crisis); color: #fff; }
 
+    /* ── Location banner ── */
+    .loc-banner {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--primary-lt);
+      border-radius: 16px; padding: 13px 16px; margin-bottom: 14px;
+      border: 1px solid rgba(124,92,191,0.12);
+    }
+    .loc-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .loc-icon { font-size: 18px; flex-shrink: 0; }
+    .loc-info { min-width: 0; }
+    .loc-title { font-weight: 800; font-size: 0.86rem; color: var(--primary-dk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .loc-sub { font-size: 0.72rem; color: var(--text-soft); margin-top: 1px; }
+    .loc-btn {
+      background: var(--primary); color: #fff; border: none;
+      border-radius: 12px; padding: 8px 15px;
+      font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      font-family: inherit; transition: background .2s; flex-shrink: 0;
+    }
+    .loc-btn:hover { background: var(--primary-dk); }
+    .loc-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── University card ── */
+    .uni-card {
+      background: var(--surface); border-radius: 18px;
+      padding: 14px 16px; margin-bottom: 10px;
+      display: flex; align-items: flex-start; gap: 13px;
+      box-shadow: var(--shadow-sm); border: 1px solid rgba(124,92,191,0.08);
+    }
+    .uni-body { flex: 1; }
+    .uni-row { display: flex; gap: 8px; margin-top: 9px; }
+    .uni-input {
+      flex: 1; border: 2px solid #E2D8F5; border-radius: 14px;
+      padding: 8px 13px; font-size: 0.82rem; font-family: inherit;
+      background: var(--bg); outline: none; color: var(--text);
+      transition: border-color .2s;
+    }
+    .uni-input:focus { border-color: var(--primary); }
+    .uni-go {
+      background: var(--primary); color: #fff; border: none;
+      border-radius: 14px; padding: 8px 14px; font-size: 0.82rem;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: background .2s; white-space: nowrap;
+    }
+    .uni-go:hover { background: var(--primary-dk); }
+
+    /* ── Section labels ── */
+    .res-section-label {
+      font-size: 0.7rem; font-weight: 800; color: var(--text-soft);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin: 16px 0 8px 2px;
+    }
+    .res-section-label:first-child { margin-top: 0; }
+
     /* ── Pied de page ── */
     footer {
       text-align: center;
@@ -491,56 +544,39 @@
     </div>
   </div>
 
-  <!-- Ressources -->
+  <!-- Resources -->
   <div class="view" id="view-resources">
     <div class="resources">
       <div class="res-title">Help Resources 💙</div>
 
-      <div class="res-card crisis-card">
-        <div class="res-icon red">🆘</div>
-        <div>
-          <div class="res-name">988 — Suicide &amp; Crisis Lifeline</div>
-          <div class="res-desc">Free, confidential support 24/7. Call or text <strong>988</strong> to reach a trained crisis counselor right away.</div>
-          <a href="tel:988" class="res-cta">Call or text 988</a>
+      <!-- Location detection banner -->
+      <div class="loc-banner">
+        <div class="loc-left">
+          <span class="loc-icon">📍</span>
+          <div class="loc-info">
+            <div class="loc-title" id="loc-title">Find resources near you</div>
+            <div class="loc-sub" id="loc-sub">Tap to detect your location</div>
+          </div>
+        </div>
+        <button class="loc-btn" id="loc-btn" onclick="detectLocation()">Detect</button>
+      </div>
+
+      <!-- University search -->
+      <div class="uni-card">
+        <div class="res-icon purple">🎓</div>
+        <div class="uni-body">
+          <div class="res-name">Your University</div>
+          <div class="res-desc">Find your campus counseling center</div>
+          <div class="uni-row">
+            <input type="text" id="uni-input" class="uni-input" placeholder="e.g. UCLA, NYU, UT Austin…"
+              onkeydown="if(event.key==='Enter') findUni()" />
+            <button class="uni-go" onclick="findUni()">Search →</button>
+          </div>
         </div>
       </div>
 
-      <div class="res-cards-grid">
-        <div class="res-card">
-          <div class="res-icon blue">💬</div>
-          <div>
-            <div class="res-name">Crisis Text Line</div>
-            <div class="res-desc">Text HOME to 741741. Free 24/7 support from trained crisis counselors — no call needed.</div>
-            <a href="sms:741741&body=HOME" class="res-cta">Text HOME to 741741</a>
-          </div>
-        </div>
-
-        <div class="res-card">
-          <div class="res-icon green">🏥</div>
-          <div>
-            <div class="res-name">Campus Counseling Center</div>
-            <div class="res-desc">Free or low-cost therapy and psychiatric services for enrolled students. Check your university's student health portal.</div>
-          </div>
-        </div>
-
-        <div class="res-card">
-          <div class="res-icon peach">🧡</div>
-          <div>
-            <div class="res-name">NAMI HelpLine</div>
-            <div class="res-desc">1-800-950-6264 — Mon–Fri, 10am–10pm ET. Free mental health info, referrals, and support for young adults.</div>
-            <a href="tel:18009506264" class="res-cta">Call NAMI</a>
-          </div>
-        </div>
-
-        <div class="res-card">
-          <div class="res-icon yellow">🧘</div>
-          <div>
-            <div class="res-name">SAMHSA Helpline</div>
-            <div class="res-desc">1-800-662-4357 — Free, confidential treatment referrals and info. Available 24/7 in English and Spanish.</div>
-            <a href="tel:18006624357" class="res-cta">Call SAMHSA</a>
-          </div>
-        </div>
-      </div>
+      <!-- Dynamic resources injected here -->
+      <div id="resources-list"></div>
     </div>
   </div>
 
@@ -587,7 +623,10 @@ let history = [];
 let crisisShown = false;
 let busy = false;
 
-window.addEventListener('DOMContentLoaded', () => boot());
+window.addEventListener('DOMContentLoaded', () => {
+  boot();
+  renderResources('US', null);
+});
 
 /* ── Démarrage ── */
 function boot() {
@@ -721,6 +760,258 @@ function sendText() {
   if (!val || busy) return;
   inp.value = '';
   sendMessage(val);
+}
+
+/* ── Resources database ── */
+const RES_DB = {
+  US: {
+    flag: '🇺🇸', name: 'United States',
+    crisis: { name: '988 Suicide & Crisis Lifeline', info: 'Free — call or text 988, 24/7', href: 'tel:988', cta: 'Call or text 988' },
+    national: [
+      { icon: '💬', color: 'blue',   name: 'Crisis Text Line',  desc: 'Text HOME to 741741. Free 24/7 counselor by text.', href: 'sms:741741?&body=HOME', cta: 'Text HOME to 741741' },
+      { icon: '🧡', color: 'peach',  name: 'NAMI HelpLine',     desc: '1-800-950-6264 — Mon–Fri 10am–10pm ET. Mental health info & referrals.', href: 'tel:18009506264', cta: 'Call NAMI' },
+      { icon: '🧘', color: 'yellow', name: 'SAMHSA Helpline',   desc: '1-800-662-4357 — Free treatment referrals, 24/7, English & Spanish.', href: 'tel:18006624357', cta: 'Call SAMHSA' },
+    ],
+    states: {
+      CA: { name: 'California',   res: [{ icon: '☎️', color: 'purple', name: 'CA Warm Line',         desc: '1-855-845-7415 — Peer support, daily 7am–11pm.', href: 'tel:18558457415', cta: 'Call' }] },
+      NY: { name: 'New York',     res: [{ icon: '☎️', color: 'purple', name: 'NY Warm Line',         desc: '1-844-943-2643 — Peer support, Mon–Fri 9am–9pm.', href: 'tel:18449432643', cta: 'Call' },
+                                        { icon: '🏙️', color: 'blue',   name: 'NYC Well',            desc: '1-888-692-9355 — NYC mental health crisis line, 24/7.', href: 'tel:18886929355', cta: 'Call NYC Well' }] },
+      TX: { name: 'Texas',        res: [{ icon: '☎️', color: 'purple', name: 'TX Behavioral Health', desc: '1-844-893-8937 — Statewide crisis & support line, 24/7.', href: 'tel:18448938937', cta: 'Call' }] },
+      FL: { name: 'Florida',      res: [{ icon: '☎️', color: 'purple', name: 'FL Crisis Line',       desc: '1-800-273-8255 — Statewide crisis support, 24/7.', href: 'tel:18002738255', cta: 'Call' }] },
+      IL: { name: 'Illinois',     res: [{ icon: '☎️', color: 'purple', name: 'IL Warm Line',         desc: '1-866-359-7953 — Peer support, daily 8am–5pm.', href: 'tel:18663597953', cta: 'Call' }] },
+      PA: { name: 'Pennsylvania', res: [{ icon: '☎️', color: 'purple', name: 'PA Warm Line',         desc: '1-855-284-2494 — Peer support, Mon–Fri 7pm–midnight.', href: 'tel:18552842494', cta: 'Call' }] },
+      OH: { name: 'Ohio',         res: [{ icon: '☎️', color: 'purple', name: 'Ohio CareLine',        desc: '1-800-720-9616 — 24/7 mental health crisis support.', href: 'tel:18007209616', cta: 'Call' }] },
+      GA: { name: 'Georgia',      res: [{ icon: '☎️', color: 'purple', name: 'GA Crisis Line',       desc: '1-800-715-4225 — 24/7 statewide mental health crisis line.', href: 'tel:18007154225', cta: 'Call' }] },
+      NC: { name: 'North Carolina',res:[{ icon: '☎️', color: 'purple', name: 'NC Peer Warm Line',    desc: '1-855-733-7956 — Peer support, Mon–Fri 2pm–10pm.', href: 'tel:18557337956', cta: 'Call' }] },
+      MI: { name: 'Michigan',     res: [{ icon: '☎️', color: 'purple', name: 'MI Warm Line',         desc: '1-888-733-7753 — Peer support, daily 10am–2am.', href: 'tel:18887337753', cta: 'Call' }] },
+      WA: { name: 'Washington',   res: [{ icon: '☎️', color: 'purple', name: 'WA Recovery Helpline', desc: '1-866-789-1511 — 24/7 support for mental health & substance use.', href: 'tel:18667891511', cta: 'Call' }] },
+      CO: { name: 'Colorado',     res: [{ icon: '☎️', color: 'purple', name: 'CO Crisis Line',       desc: '1-844-493-8255 — 24/7 crisis support & walk-in centers.', href: 'tel:18444938255', cta: 'Call' }] },
+      MA: { name: 'Massachusetts',res: [{ icon: '☎️', color: 'purple', name: 'MA Helpline',          desc: '1-800-327-5050 — Mental health referrals, Mon–Fri 9am–5pm.', href: 'tel:18003275050', cta: 'Call' }] },
+      AZ: { name: 'Arizona',      res: [{ icon: '☎️', color: 'purple', name: 'AZ Crisis Line',       desc: '1-800-631-1314 — 24/7 Maricopa County crisis line.', href: 'tel:18006311314', cta: 'Call' }] },
+      OR: { name: 'Oregon',       res: [{ icon: '☎️', color: 'purple', name: 'Lines for Life',       desc: '1-800-273-8255 — 24/7 crisis support & suicide prevention.', href: 'tel:18002738255', cta: 'Call' }] },
+      MN: { name: 'Minnesota',    res: [{ icon: '☎️', color: 'purple', name: 'NAMI MN Warm Line',    desc: '651-288-0400 — Peer support, Mon–Fri 4pm–8pm.', href: 'tel:6512880400', cta: 'Call' }] },
+      VA: { name: 'Virginia',     res: [{ icon: '☎️', color: 'purple', name: 'VA Crisis Line',       desc: '1-800-828-1120 — 24/7 mental health crisis support.', href: 'tel:18008281120', cta: 'Call' }] },
+      NJ: { name: 'New Jersey',   res: [{ icon: '☎️', color: 'purple', name: 'NJ Hope Line',         desc: '1-855-654-6735 — 24/7 peer support.', href: 'tel:18556546735', cta: 'Call' }] },
+      WI: { name: 'Wisconsin',    res: [{ icon: '☎️', color: 'purple', name: 'WI Crisis Line',       desc: '1-800-815-8989 — 24/7 statewide crisis support.', href: 'tel:18008158989', cta: 'Call' }] },
+      IN: { name: 'Indiana',      res: [{ icon: '☎️', color: 'purple', name: 'IN Crisis Line',       desc: '1-800-662-3445 — 24/7 mental health crisis line.', href: 'tel:18006623445', cta: 'Call' }] },
+      TN: { name: 'Tennessee',    res: [{ icon: '☎️', color: 'purple', name: 'TN Statewide Line',    desc: '1-855-274-7471 — 24/7 crisis & referral support.', href: 'tel:18552747471', cta: 'Call' }] },
+    }
+  },
+  GB: {
+    flag: '🇬🇧', name: 'United Kingdom',
+    crisis: { name: 'Samaritans', info: 'Call 116 123 — Free, 24/7', href: 'tel:116123', cta: 'Call 116 123' },
+    national: [
+      { icon: '💬', color: 'blue',   name: 'Shout Crisis Text Line', desc: 'Text SHOUT to 85258. Free 24/7 text-based support.', href: 'sms:85258?&body=SHOUT', cta: 'Text SHOUT' },
+      { icon: '🧡', color: 'peach',  name: 'Mind Infoline',          desc: '0300 123 3393 — Mon–Fri 9am–6pm. Mental health info & support.', href: 'tel:03001233393', cta: 'Call Mind' },
+    ]
+  },
+  CA: {
+    flag: '🇨🇦', name: 'Canada',
+    crisis: { name: '988 Suicide Crisis Helpline', info: 'Call or text 988 — Free, 24/7', href: 'tel:988', cta: 'Call or text 988' },
+    national: [
+      { icon: '💬', color: 'blue', name: 'Crisis Services Canada', desc: '1-833-456-4566 — 24/7. Also text 45645 (4pm–midnight ET).', href: 'tel:18334564566', cta: 'Call' },
+    ]
+  },
+  AU: {
+    flag: '🇦🇺', name: 'Australia',
+    crisis: { name: 'Lifeline Australia', info: 'Call 13 11 14 — Free, 24/7', href: 'tel:131114', cta: 'Call 13 11 14' },
+    national: [
+      { icon: '💙', color: 'blue',   name: 'Beyond Blue',  desc: '1300 22 4636 — 24/7 mental health support.', href: 'tel:1300224636', cta: 'Call Beyond Blue' },
+      { icon: '🧡', color: 'peach',  name: 'headspace',    desc: '1800 650 890 — Support for young people 12–25.', href: 'tel:1800650890', cta: 'Call headspace' },
+    ]
+  },
+  FR: {
+    flag: '🇫🇷', name: 'France',
+    crisis: { name: '3114 — Prévention Suicide', info: 'Gratuit, 24h/24', href: 'tel:3114', cta: 'Appeler le 3114' },
+    national: [
+      { icon: '🌙', color: 'blue', name: 'Nightline France', desc: '0800 235 236 — Écoute étudiante bénévole, 21h–2h30.', href: 'tel:0800235236', cta: '0800 235 236' },
+    ]
+  },
+  DE: {
+    flag: '🇩🇪', name: 'Germany',
+    crisis: { name: 'TelefonSeelsorge', info: '0800 111 0 111 — Free, 24/7', href: 'tel:08001110111', cta: '0800 111 0 111' },
+    national: []
+  },
+  ES: {
+    flag: '🇪🇸', name: 'Spain',
+    crisis: { name: 'Línea de Atención a la Conducta Suicida', info: '024 — Free, 24/7', href: 'tel:024', cta: 'Call 024' },
+    national: [
+      { icon: '☎️', color: 'blue', name: 'Teléfono de la Esperanza', desc: '717 003 717 — Emotional support, 24/7.', href: 'tel:717003717', cta: '717 003 717' },
+    ]
+  },
+  IT: {
+    flag: '🇮🇹', name: 'Italy',
+    crisis: { name: 'Telefono Amico', info: '02 2327 2327 — Daily 10am–midnight', href: 'tel:0223272327', cta: '02 2327 2327' },
+    national: [
+      { icon: '☎️', color: 'blue', name: 'Telefono Azzurro', desc: '19696 — Support for young people.', href: 'tel:19696', cta: '19696' },
+    ]
+  },
+  NL: {
+    flag: '🇳🇱', name: 'Netherlands',
+    crisis: { name: '113 Zelfmoordpreventie', info: '0800 0113 — Free, 24/7', href: 'tel:08000113', cta: '0800 0113' },
+    national: []
+  },
+  BE: {
+    flag: '🇧🇪', name: 'Belgium',
+    crisis: { name: 'Centre de Prévention du Suicide', info: '0800 32 123 — Free, 24/7', href: 'tel:0800032123', cta: '0800 32 123' },
+    national: []
+  },
+  CH: {
+    flag: '🇨🇭', name: 'Switzerland',
+    crisis: { name: 'Die Dargebotene Hand', info: '143 — Free, 24/7', href: 'tel:143', cta: 'Call 143' },
+    national: []
+  },
+  JP: {
+    flag: '🇯🇵', name: 'Japan',
+    crisis: { name: 'Inochi no Denwa', info: '0120-783-556 — Free, 24/7', href: 'tel:0120783556', cta: '0120-783-556' },
+    national: []
+  },
+  KR: {
+    flag: '🇰🇷', name: 'South Korea',
+    crisis: { name: 'Korea Suicide Prevention Hotline', info: '1393 — Free, 24/7', href: 'tel:1393', cta: 'Call 1393' },
+    national: []
+  },
+  MX: {
+    flag: '🇲🇽', name: 'Mexico',
+    crisis: { name: 'SAPTEL', info: '55 5259 8121 — Free, 24/7', href: 'tel:5552598121', cta: '55 5259 8121' },
+    national: []
+  },
+  BR: {
+    flag: '🇧🇷', name: 'Brazil',
+    crisis: { name: 'CVV — Centro de Valorização da Vida', info: '188 — Free, 24/7', href: 'tel:188', cta: 'Call 188' },
+    national: []
+  },
+  IN: {
+    flag: '🇮🇳', name: 'India',
+    crisis: { name: 'iCall', info: '9152987821 — Mon–Sat 8am–10pm IST', href: 'tel:9152987821', cta: '9152987821' },
+    national: [
+      { icon: '☎️', color: 'blue', name: 'Vandrevala Foundation', desc: '1860-2662-345 — Free mental health support, 24/7.', href: 'tel:18602662345', cta: 'Call' },
+    ]
+  },
+};
+
+const US_STATE_MAP = {
+  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+  'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+  'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA',
+  'Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD',
+  'Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO',
+  'Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ',
+  'New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH',
+  'Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC',
+  'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT',
+  'Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'
+};
+
+/* ── Location detection ── */
+async function detectLocation() {
+  const btn = document.getElementById('loc-btn');
+  const title = document.getElementById('loc-title');
+  const sub = document.getElementById('loc-sub');
+  btn.disabled = true;
+  btn.textContent = '…';
+  title.textContent = 'Detecting location…';
+  sub.textContent = 'Please allow location access';
+
+  if (!navigator.geolocation) {
+    title.textContent = 'Not supported';
+    sub.textContent = 'Your browser doesn\'t support geolocation';
+    btn.textContent = 'OK';
+    btn.disabled = false;
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async ({ coords }) => {
+      try {
+        const r = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${coords.latitude}&lon=${coords.longitude}&format=json`,
+          { headers: { 'Accept-Language': 'en', 'User-Agent': 'StudentSupportApp/1.0' } }
+        );
+        const d = await r.json();
+        const cc = (d.address?.country_code || 'us').toUpperCase();
+        const stateCode = US_STATE_MAP[d.address?.state] || null;
+        const city = d.address?.city || d.address?.town || d.address?.village || '';
+        const country = d.address?.country || '';
+
+        title.textContent = '📍 ' + [city, country].filter(Boolean).join(', ');
+        sub.textContent = 'Showing resources for your location';
+        btn.textContent = 'Update';
+        btn.disabled = false;
+        renderResources(cc, stateCode);
+      } catch {
+        locationFallback(btn, title, sub);
+      }
+    },
+    () => locationFallback(btn, title, sub)
+  );
+}
+
+function locationFallback(btn, title, sub) {
+  title.textContent = 'Location unavailable';
+  sub.textContent = 'Showing default US resources';
+  btn.textContent = 'Retry';
+  btn.disabled = false;
+  renderResources('US', null);
+}
+
+/* ── Render resources ── */
+function renderResources(cc, stateCode) {
+  const db = RES_DB[cc] || RES_DB['US'];
+  const usDb = RES_DB['US'];
+  let html = '';
+
+  // Crisis line
+  if (db.crisis) {
+    html += `<div class="res-section-label">${db.flag || ''} Crisis Line</div>`;
+    html += crisisCard(db.crisis);
+  }
+
+  // State-specific (US only)
+  if (cc === 'US' && stateCode && usDb.states[stateCode]) {
+    const st = usDb.states[stateCode];
+    html += `<div class="res-section-label">📍 ${st.name} Resources</div>`;
+    st.res.forEach(r => { html += resCard(r); });
+  }
+
+  // National resources
+  if (db.national?.length) {
+    html += `<div class="res-section-label">National Resources</div>`;
+    db.national.forEach(r => { html += resCard(r); });
+  }
+
+  document.getElementById('resources-list').innerHTML = html;
+}
+
+function crisisCard(c) {
+  return `<div class="res-card crisis-card">
+    <div class="res-icon red">🆘</div>
+    <div>
+      <div class="res-name">${c.name}</div>
+      <div class="res-desc">${c.info}</div>
+      <a href="${c.href}" class="res-cta">${c.cta}</a>
+    </div>
+  </div>`;
+}
+
+function resCard(r) {
+  const cta = r.href ? `<a href="${r.href}" class="res-cta">${r.cta}</a>` : '';
+  return `<div class="res-card">
+    <div class="res-icon ${r.color || 'purple'}">${r.icon}</div>
+    <div>
+      <div class="res-name">${r.name}</div>
+      <div class="res-desc">${r.desc}</div>
+      ${cta}
+    </div>
+  </div>`;
+}
+
+/* ── University search ── */
+function findUni() {
+  const name = document.getElementById('uni-input').value.trim();
+  if (!name) return;
+  const q = encodeURIComponent(name + ' counseling center student mental health');
+  window.open('https://www.google.com/search?q=' + q, '_blank');
 }
 
 /* ── Navigation ── */
